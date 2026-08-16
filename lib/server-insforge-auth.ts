@@ -6,7 +6,7 @@ const INSFORGE_ANON_KEY = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY;
 function createDemoUser(): UserSchema {
   const timestamp = new Date().toISOString();
 
-  return {
+  const demo = {
     created_at: timestamp,
     email: "demo@skillpet.ai",
     emailVerified: true,
@@ -17,7 +17,9 @@ function createDemoUser(): UserSchema {
       name: "Demo Learner",
     },
     updated_at: timestamp,
-  } as UserSchema;
+  } as unknown as UserSchema;
+
+  return demo;
 }
 
 function getInsforgeConfig() {

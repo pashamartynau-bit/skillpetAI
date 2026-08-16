@@ -1,4 +1,4 @@
-import { createClient, type InsForgeClient, type UserSchema } from "@insforge/sdk";
+﻿import { createClient, type InsForgeClient, type UserSchema } from "@insforge/sdk";
 
 const DEMO_USER_KEY = "skillpet-demo-user";
 const DEMO_ACCESS_TOKEN = "demo-token";
@@ -25,7 +25,7 @@ function createDemoUser(overrides: Partial<UserSchema> = {}): UserSchema {
       name: "Demo Learner",
     },
     ...overrides,
-  } as UserSchema;
+  } as unknown as UserSchema;
 
   return baseUser;
 }
@@ -135,7 +135,7 @@ function createDemoClient(): InsForgeClient {
       signUp,
     },
     getHttpClient: () => ({
-      getHeaders: () => ({ Authorization: `Bearer ${DEMO_ACCESS_TOKEN}` }),
+      getHeaders: () => ({ Authorization: 'Bearer ******' }),
     }),
   } as unknown as InsForgeClient;
 }
