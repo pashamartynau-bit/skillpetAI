@@ -17,8 +17,15 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillPet Auth",
-  description: "Sign in and sign up flows powered by InsForge and Strapi.",
+  title: "SkillPet AI",
+  description: "Learn with your SkillPet companion through interactive courses and daily streaks.",
+  icons: {
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+    ],
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

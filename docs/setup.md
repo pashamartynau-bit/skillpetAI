@@ -64,7 +64,7 @@ Strapi is the Headless CMS managing courses, chapters, and companion progression
      4. Set **Token type** to *Custom*.
      5. Under permissions, grant `find`, `findOne`, `create`, and `update` access to the following collection types:
         - **App User** (`app-users`)
-        - **User Course Progress** (`user-course-progresses`)
+         - **User Course Progress** (`user-course-progresses`)
      6. Copy the generated token and save it as `STRAPI_API_TOKEN`.
 3. **Collection Names**:
    - `STRAPI_USERS_COLLECTION`: Default is `app-users`.
