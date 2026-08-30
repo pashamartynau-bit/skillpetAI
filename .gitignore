@@ -42,3 +42,18 @@ next-env.d.ts
 
 # local AI / MCP client configuration
 .cursor/mcp.json
+
+# InsForge & AI agent skills
+.insforge
+.agent
+.agents
+.augment
+.claude
+.cline
+.github/copilot*
+.kilocode
+.qoder
+.qwen
+.roo
+.trae
+.windsurf
