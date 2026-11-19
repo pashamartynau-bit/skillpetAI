@@ -161,7 +161,7 @@ export default function AchievementsPage() {
           icon={
             <Image
               src="/heart.png"
-              alt="SkillPet icon"
+              alt="Omni AI icon"
               width={40}
               height={40}
               className="h-10 w-10 object-contain"
@@ -300,7 +300,7 @@ export default function AchievementsPage() {
                             {entry.isCurrentUser ? `You (${entry.displayName})` : entry.displayName}
                           </p>
                           <p className="mt-1 text-sm text-[#73809d]">
-                            {entry.isCurrentUser ? "Your current position" : "SkillPet learner"}
+                            {entry.isCurrentUser ? "Your current position" : "Omni AI learner"}
                           </p>
                         </div>
                       </div>
@@ -323,7 +323,7 @@ export default function AchievementsPage() {
                         icon={
                           <Image
                             src="/logo.png"
-                            alt="SkillPet icon"
+                            alt="Omni AI icon"
                             width={16}
                             height={16}
                             className="h-4 w-4 object-contain"

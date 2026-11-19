@@ -497,7 +497,7 @@ export function AuthScreen() {
           <div className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-white/80 dark:bg-neutral-900/80 px-3 py-1 font-mono text-xs uppercase tracking-[0.24em] text-muted shadow-sm backdrop-blur">
               <span className ="h-2 w-2 rounded-full bg-accent animate-pulse" />
-              Learn AI Skillz
+              Omni AI
             </span>
             <div className="space-y-4">
               <h1 className="max-w-2xl text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl font-heading leading-[1.05]">
@@ -757,7 +757,7 @@ export function AuthScreen() {
                 {currentUser
                   ? "Need another account?"
                   : mode === "sign-in"
-                    ? "New to SkillPet?"
+                    ? "New to Omni AI?"
                     : "Already have an account?"}{" "}
                 <button
                   type="button"

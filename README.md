@@ -1,15 +1,16 @@
-# 🐾 SkillPet AI
+# Omni AI
 
-SkillPet AI is a premium, gamified educational learning platform built with **Next.js 16**, **React 19**, **InsForge**, **Strapi Headless CMS**, and **Stripe**. 
+Omni AI is a premium, gamified educational learning platform built with **Next.js 16**, **React 19**, **InsForge**, **Strapi Headless CMS**, and **Stripe**.
 
-It transforms online education by introducing virtual pets ("SkillPets") that accompany learners throughout their journey. By completing chapters, passing quizzes, and maintaining daily learning streaks, users earn gems and hearts, leveling up their chosen pet companions.
+It transforms online education with virtual companions that accompany learners throughout their journey. By completing chapters, passing quizzes, and maintaining daily learning streaks, users earn gems and hearts, leveling up their chosen pets.
 
 ---
 
 ## ✨ Features
 
 - **Gamified Learning Hub**: Interactive theory blocks, multiple-choice quizzes, fill-in-the-blanks, true/false questions, matching activities, and coding exercise sandboxes.
-- **SkillPet Companion**: Pick and customize a companion character (from `/public/characters`) that grows as you complete courses.
+- **Omni Guide**: Get course recommendations through a chat-style guide that searches the live course catalog.
+- **AI Pet Companion**: Pick and customize a companion character (from `/public/characters`) that grows as you complete courses.
 - **Daily Streak Calendar**: Interactive streak system to encourage daily learning habits.
 - **Stripe Subscriptions**: Seamlessly unlock premium courses with Monthly or Yearly payment plans.
 - **Secure Authentication**: Power-packed auth flow via InsForge with automatic user profile synchronization to Strapi.
@@ -29,13 +30,13 @@ It transforms online education by introducing virtual pets ("SkillPets") that ac
 
 ## 🚀 Getting Started
 
-Follow these steps to run SkillPet AI on your local machine.
+Follow these steps to run Omni AI on your local machine.
 
 ### 1. Clone & Install Dependencies
 
 ```bash
 # Clone the repository
-cd skillpet-ai
+cd omni-ai
 
 # Install package dependencies
 npm install
@@ -71,7 +72,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_webhook_signing_secret
 ```
 
 > [!TIP]
-> For detailed instructions on how to generate the API keys, tokens, and configure webhook forwarding for each service, read the [Detailed Project Setup Guide](file:///Users/rahulsanap/Documents/Projects/Nextjs%202026/skillpet-ai/docs/setup.md).
+> For detailed instructions on how to generate the API keys, tokens, and configure webhook forwarding for each service, read the [Detailed Project Setup Guide](docs/setup.md).
 
 ### 3. Start Local Services & Webhooks
 
@@ -116,5 +117,5 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ## 📖 Documentation Links
 
-- 🛠️ [Detailed Project Setup Guide](file:///Users/rahulsanap/Documents/Projects/Nextjs%202026/skillpet-ai/docs/setup.md)
-- 🗄️ [Strapi Collections Schema Definition](file:///Users/rahulsanap/Documents/Projects/Nextjs%202026/skillpet-ai/docs/strapi-collections.md)
+- 🛠️ [Detailed Project Setup Guide](docs/setup.md)
+- 🗄️ [Strapi Collections Schema Definition](docs/strapi-collections.md)

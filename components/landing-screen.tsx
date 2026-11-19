@@ -102,8 +102,8 @@ const COMPANIONS = [
 // FAQS data
 const FAQS = [
   {
-    question: "What is SkillPet AI?",
-    answer: "SkillPet AI is an interactive learning platform that blends gamification with technical education. As you complete lessons in coding, math, and artificial intelligence, your chosen companion pet levels up, earns rewards, and evolves to guide you on more advanced learning quests."
+    question: "What is Omni AI?",
+    answer: "Omni AI is an interactive learning platform that blends gamification with technical education. As you complete lessons in coding, math, and artificial intelligence, your chosen companion pet levels up, earns rewards, and evolves to guide you on more advanced learning quests."
   },
   {
     question: "How does the pet evolution work?",
@@ -115,7 +115,7 @@ const FAQS = [
   },
   {
     question: "How does the subscription plan work?",
-    answer: "Our Free Tier gives you full access to introductory chapters of all courses with a daily limit of 3 hearts. Upgrading to the SkillPet Plus tier (Monthly or Yearly) removes the heart limit entirely, provides unlimited AI-powered hints and review sheets, and grants access to exclusive premium pet skins and achievements."
+    answer: "Our Free Tier gives you full access to introductory chapters of all courses with a daily limit of 3 hearts. Upgrading to Omni AI Plus (Monthly or Yearly) removes the heart limit entirely, provides unlimited AI-powered hints and review sheets, and grants access to exclusive premium pet skins and achievements."
   },
   {
     question: "How are the courses formatted?",
@@ -200,7 +200,7 @@ export function LandingScreen() {
               <Sparkles className="h-5 w-5" />
             </div>
             <span className="font-heading text-lg font-bold tracking-tight text-[#102312]">
-              SkillPet <span className="text-[#3cc74f]">AI</span>
+              Omni <span className="text-[#3cc74f]">AI</span>
             </span>
           </Link>
 
@@ -581,7 +581,7 @@ export function LandingScreen() {
                 Stay motivated with a gamified wallet & streaks
               </h3>
               <p className="text-sm leading-relaxed text-[#5a705d]">
-                Just like your favorite languages and apps, SkillPet keeps you coming back daily with an elegant status panel. Use gems to purchase premium items, hearts to recover from mistakes, and streaks to prove your consistency.
+                Just like your favorite languages and apps, Omni AI keeps you coming back daily with an elegant status panel. Use gems to purchase premium items, hearts to recover from mistakes, and streaks to prove your consistency.
               </p>
               
               <ul className="space-y-3 pt-2">
@@ -881,7 +881,7 @@ export function LandingScreen() {
               <div>
                 <p className="text-sm font-bold uppercase tracking-wider text-[#2ca949] flex items-center gap-1.5">
                   <Sparkles className="h-4 w-4" />
-                  SkillPet Plus
+                  Omni AI Plus
                 </p>
                 <div className="mt-4 flex items-baseline">
                   <span className="font-heading text-5xl font-bold text-[#102312]">
@@ -1003,7 +1003,7 @@ export function LandingScreen() {
                 {[...Array(5)].map((_, i) => <Star key={i} className="h-4.5 w-4.5 fill-current" />)}
               </div>
               <p className="text-sm leading-relaxed text-[#5a705d]">
-                &ldquo;Highly recommend SkillPet Plus! The unlimited hearts mean I can explore buggy solutions and get custom AI diagnostics feedback without feeling discouraged.&rdquo;
+                &ldquo;Highly recommend Omni AI Plus! The unlimited hearts mean I can explore buggy solutions and get custom AI diagnostics feedback without feeling discouraged.&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-neutral-100 rounded-full flex items-center justify-center font-bold text-xs text-[#c87618]">
@@ -1079,7 +1079,7 @@ export function LandingScreen() {
               <Sparkles className="h-4.5 w-4.5" />
             </div>
             <span className="font-heading font-bold text-sm text-[#102312]">
-              SkillPet AI
+              Omni AI
             </span>
           </div>
 
@@ -1090,7 +1090,7 @@ export function LandingScreen() {
           </div>
 
           <p className="text-xs text-[#5a705d]">
-            &copy; {new Date().getFullYear()} SkillPet AI. All rights reserved.
+            &copy; {new Date().getFullYear()} Omni AI. All rights reserved.
           </p>
 
         </div>

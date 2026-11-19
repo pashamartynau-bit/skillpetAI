@@ -177,7 +177,7 @@ export function BillingPageScreen({
                       <p className="mt-2 text-sm leading-6 text-[#697391]">
                         {planKey === "monthly"
                           ? "Flexible monthly access for all paid and locked freemium chapters."
-                          : "Best value annual access for the full SkillPet learning catalog."}
+                          : "Best value annual access for the full Omni AI learning catalog."}
                       </p>
                     </div>
 

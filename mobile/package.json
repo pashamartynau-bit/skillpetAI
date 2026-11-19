@@ -1,13 +1,13 @@
 {
-  "name": "mobile",
+  "name": "omni-ai-mobile",
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
-    "expo": "~57.0.13",
+    "expo": "~57.0.33",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-native": "0.86.2",
+    "react-native": "0.86.3",
     "react-native-web": "^0.21.2"
   },
   "devDependencies": {
@@ -17,6 +17,13 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "android:local": "expo run:android",
+    "android:prebuild": "expo prebuild --platform android",
+    "android:build:preview": "npx eas-cli build --platform android --profile preview",
+    "android:build:production": "npx eas-cli build --platform android --profile production",
+    "android:submit": "npx eas-cli submit --platform android --profile production",
+    "eas:login": "npx eas-cli login",
+    "eas:init": "npx eas-cli init",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },

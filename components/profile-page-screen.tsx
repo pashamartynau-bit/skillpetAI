@@ -170,7 +170,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-[#697391]">
             Review your synced profile details, switch your selected character, and
-            manage the settings that shape how SkillPet works for you.
+            manage the settings that shape how Omni AI works for you.
           </p>
         </div>
 
@@ -214,7 +214,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
               </div>
               <div className="min-w-0">
                 <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
-                  {profile.displayName?.trim() || "SkillPet learner"}
+                  {profile.displayName?.trim() || "Omni AI learner"}
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#697391]">
                   <span className="inline-flex items-center gap-1 rounded-full bg-[#f3f6fb] px-3 py-1">
@@ -306,7 +306,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
         <CardContent className="grid gap-3 pt-6">
           <SettingRow
             checked={settings.emailRemindersEnabled}
-            description="Keep weekly email reminders on so SkillPet can nudge you back into a course."
+            description="Keep weekly email reminders on so Omni AI can nudge you back into a course."
             label="Email reminders"
             onCheckedChange={(checked) => {
               setSettingsOverride({
@@ -389,7 +389,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
         </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-base font-semibold text-[#18224d]">Sign out of SkillPet</p>
+            <p className="text-base font-semibold text-[#18224d]">Sign out of Omni AI</p>
             <p className="mt-1 text-sm leading-6 text-[#697391]">
               This clears your local session and learning progress cache on this browser.
             </p>

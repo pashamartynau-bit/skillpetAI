@@ -1,8 +1,8 @@
 # Project Setup Guide
 
-This guide provides step-by-step instructions for configuring and running the **SkillPet AI** project locally and in production.
+This guide provides step-by-step instructions for configuring and running the **Omni AI** project locally and in production.
 
-SkillPet AI integrates three primary services:
+Omni AI integrates three primary services:
 1. **InsForge**: Handles backend database, custom serverless functions, and user authentication.
 2. **Strapi CMS**: Manages courses, chapters, content blocks, and handles user progress synchronization.
 3. **Stripe**: Manages subscription billing (monthly/yearly plans) and payments.
@@ -69,7 +69,7 @@ Strapi is the Headless CMS managing courses, chapters, and companion progression
 3. **Collection Names**:
    - `STRAPI_USERS_COLLECTION`: Default is `app-users`.
    - `STRAPI_USER_COURSE_PROGRESS_COLLECTION`: Default is `user-course-progresses`.
-   - Refer to [docs/strapi-collections.md](file:///Users/rahulsanap/Documents/Projects/Nextjs%202026/skillpet-ai/docs/strapi-collections.md) for full collection schema details.
+   - Refer to [the Strapi collections guide](strapi-collections.md) for full collection schema details.
 
 ---
 
@@ -84,7 +84,7 @@ Stripe powers the monthly and yearly subscriptions for premium courses and full 
      3. Navigate to **Developers** -> **API Keys**.
      4. Copy the **Secret key** (starts with `sk_test_`).
 2. **Setup Subscriptions**:
-   - Create a recurring Product in Stripe (e.g., "SkillPet AI Premium").
+   - Create a recurring Product in Stripe (e.g., "Omni AI Premium").
    - Add two Price points:
      - **Monthly**: `$5.99/month`
      - **Yearly**: `$49.99/year`

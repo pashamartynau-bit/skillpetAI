@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SkillPet AI",
-    "slug": "skillpet-ai-mobile",
+    "name": "Omni AI",
+    "slug": "omni-ai-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,6 +11,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.pashamartynau.omniai",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#08111f",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* SkillPet Custom Theme Colors */
+  /* Omni AI theme colors */
   --background: #eef4e6;
   --foreground: #102312;
   --card: rgba(255, 255, 255, 0.82);

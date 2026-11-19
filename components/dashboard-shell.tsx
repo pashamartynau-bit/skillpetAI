@@ -340,7 +340,7 @@ function DashboardShellInner({
           >
             <Image
               src="/logo.png"
-              alt="SkillPet logo"
+              alt="Omni AI logo"
               width={isCollapsed ? 40 : 48}
               height={isCollapsed ? 40 : 48}
               className="object-contain"
@@ -351,7 +351,7 @@ function DashboardShellInner({
                   Learn Mode
                 </p>
                 <h1 className="font-heading text-2xl leading-none tracking-[-0.05em] text-sidebar-foreground">
-                  SkillPet
+                  Omni AI
                 </h1>
               </div>
             ) : null}
@@ -436,7 +436,7 @@ function DashboardShellInner({
                       Upgrade to Pro
                     </p>
                     <p className="mt-1 text-sm leading-5 text-sidebar-foreground/70">
-                      Unlock the full SkillPet catalog and premium lessons.
+                      Unlock the full Omni AI catalog and premium lessons.
                     </p>
                     <Button
                       render={<Link href="/dashboard/billing" />}
@@ -538,7 +538,7 @@ function DashboardShellInner({
                   Dashboard
                 </p>
                 <p className="font-heading text-2xl tracking-[-0.05em] text-foreground">
-                  SkillPet
+                  Omni AI
                 </p>
               </div>
             </div>
@@ -769,7 +769,7 @@ function ProfileAvatarPopover({
             )}
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-sm truncate text-foreground leading-tight">
-                {profile?.displayName || "SkillPet Learner"}
+                {profile?.displayName || "Omni AI Learner"}
               </p>
               <p className="text-xs text-muted-foreground truncate">
                 {profile?.email}

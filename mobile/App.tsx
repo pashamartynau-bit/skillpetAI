@@ -35,7 +35,7 @@ export default function App() {
         <View style={styles.headerBar}>
           <View>
             <Text style={styles.eyebrow}>Good morning</Text>
-            <Text style={styles.title}>SkillPet AI</Text>
+            <Text style={styles.title}>Omni AI</Text>
           </View>
           <TouchableOpacity style={styles.profileButton}>
             <Text style={styles.profileText}>JS</Text>

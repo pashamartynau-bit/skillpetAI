@@ -1079,7 +1079,7 @@ function MalformedBlockNotice({ block }: { block: ChapterContentBlockRecord }) {
             This content needs to be completed in Strapi
           </p>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-[#5f7194]">
-            SkillPet can render the <strong>{block.type}</strong> block type, but the
+            Omni AI can render the <strong>{block.type}</strong> block type, but the
             currently published record is missing the fields required to validate this
             step. Continue is left available so the chapter flow stays usable.
           </p>

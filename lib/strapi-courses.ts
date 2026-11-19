@@ -303,7 +303,7 @@ function normalizeCourse(course: StrapiCourse): CourseRecord | null {
     bannerSrc: resolveMediaUrl(course.banner?.url),
     bannerWidth: course.banner?.width ?? 1254,
     chapters: normalizeChapters(course.chapters, course.slug.trim()),
-    description: course.shortDescription?.trim() || "Start this AI course in SkillPet.",
+    description: course.shortDescription?.trim() || "Start this AI course with Omni AI.",
     difficulty: course.difficultyLevel?.trim() || "Beginner",
     documentId: course.documentId,
     estimatedMinutes: typeof course.estimatedMinutes === "number" ? course.estimatedMinutes : null,

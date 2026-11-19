@@ -1,0 +1,296 @@
+"use client";
+
+import Link from "next/link";
+import { ArrowRight, BookOpen, MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { useState } from "react";
+
+import { fetchDashboardCourses, type DashboardCourse } from "@/lib/course-api";
+
+type ChatMessage = {
+  id: string;
+  role: "assistant" | "user";
+  text: string;
+  courses?: DashboardCourse[];
+};
+
+const STARTER_PROMPTS = ["AI and machine learning", "Learn to code", "Data and analytics"];
+
+const TOPIC_GROUPS = [
+  {
+    aliases: ["ai", "artificial intelligence", "machine learning", "neural network", "prompt"],
+    keywords: ["ai", "artificial intelligence", "machine learning", "neural", "prompt", "agent"],
+  },
+  {
+    aliases: ["coding", "programming", "code", "python", "javascript", "software"],
+    keywords: ["coding", "programming", "code", "python", "javascript", "software", "web"],
+  },
+  {
+    aliases: ["data", "analytics", "sql", "database", "visualization"],
+    keywords: ["data", "analytics", "sql", "database", "visualization", "statistics"],
+  },
+  {
+    aliases: ["design", "ui", "ux", "frontend", "css"],
+    keywords: ["design", "ui", "ux", "frontend", "css", "visual"],
+  },
+  {
+    aliases: ["math", "mathematics", "algebra", "statistics"],
+    keywords: ["math", "mathematics", "algebra", "statistics", "probability"],
+  },
+];
+
+const STOP_WORDS = new Set([
+  "about",
+  "and",
+  "course",
+  "courses",
+  "for",
+  "from",
+  "help",
+  "into",
+  "learn",
+  "like",
+  "looking",
+  "me",
+  "please",
+  "the",
+  "want",
+  "what",
+  "with",
+]);
+
+function findMatchingCourses(query: string, courses: DashboardCourse[]) {
+  const normalizedQuery = query.toLowerCase();
+  const queryTerms = new Set(
+    normalizedQuery.match(/[a-z0-9+#.]+/g)?.filter(
+      (term) => term.length > 2 && !STOP_WORDS.has(term),
+    ) ?? [],
+  );
+
+  return courses
+    .map((course) => {
+      const searchableText =
+        `${course.name} ${course.description} ${course.difficulty}`.toLowerCase();
+      let score = [...queryTerms].filter((term) => searchableText.includes(term)).length;
+
+      for (const topic of TOPIC_GROUPS) {
+        if (topic.aliases.some((alias) => normalizedQuery.includes(alias))) {
+          score += topic.keywords.filter((keyword) => searchableText.includes(keyword)).length * 2;
+        }
+      }
+
+      if (
+        /\b(beginner|new to|starting out)\b/.test(normalizedQuery) &&
+        /beginner|introductory/i.test(course.difficulty)
+      ) {
+        score += 1;
+      }
+
+      return { course, score };
+    })
+    .filter((match) => match.score > 0)
+    .sort(
+      (left, right) =>
+        right.score - left.score ||
+        Number(right.course.isFeatured) - Number(left.course.isFeatured) ||
+        left.course.sortOrder - right.course.sortOrder,
+    )
+    .slice(0, 3)
+    .map((match) => match.course);
+}
+
+export function CourseGuideChat() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [isThinking, setIsThinking] = useState(false);
+  const [courses, setCourses] = useState<DashboardCourse[] | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: "welcome",
+      role: "assistant",
+      text: "Tell me what you want to learn and your experience level. I’ll help you find a course that fits.",
+    },
+  ]);
+  const [nextMessageId, setNextMessageId] = useState(1);
+
+  async function sendMessage(message: string) {
+    const query = message.trim();
+    if (!query || isThinking) {
+      return;
+    }
+
+    setInput("");
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      { id: `user-${nextMessageId}`, role: "user", text: query },
+    ]);
+    setNextMessageId((currentId) => currentId + 1);
+    setIsThinking(true);
+
+    try {
+      const availableCourses = courses ?? (await fetchDashboardCourses());
+      setCourses(availableCourses);
+      const matches = findMatchingCourses(query, availableCourses);
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: `assistant-${nextMessageId}`,
+          role: "assistant",
+          text: matches.length
+            ? "These available courses look like a good fit. Tell me your experience level if you’d like me to narrow it down."
+            : "I couldn’t match that to a course yet. Are you interested in AI, coding, data, design, or math?",
+          courses: matches,
+        },
+      ]);
+    } catch (error) {
+      console.error("Failed to load courses for Omni Guide:", error);
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: `assistant-${nextMessageId}`,
+          role: "assistant",
+          text: "I couldn’t load the course catalog just now. Please try again in a moment.",
+        },
+      ]);
+    } finally {
+      setNextMessageId((currentId) => currentId + 1);
+      setIsThinking(false);
+    }
+  }
+
+  return (
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+      {isOpen ? (
+        <section
+          aria-label="Omni Guide course assistant"
+          className="flex h-[min(36rem,calc(100dvh-6rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-[#dce6d7] bg-white shadow-[0_24px_80px_-24px_rgba(16,35,18,0.35)]"
+          role="dialog"
+        >
+          <header className="flex items-center justify-between bg-[#102312] px-5 py-4 text-white">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#3cc74f] text-[#102312]">
+                <Sparkles aria-hidden="true" className="h-5 w-5" />
+              </span>
+              <div>
+                <p className="font-semibold">Omni Guide</p>
+                <p className="text-xs text-white/70">Find your next course</p>
+              </div>
+            </div>
+            <button
+              aria-label="Close Omni Guide"
+              className="rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white"
+              onClick={() => setIsOpen(false)}
+              type="button"
+            >
+              <X aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </header>
+
+          <div
+            aria-live="polite"
+            className="flex-1 space-y-4 overflow-y-auto bg-[#f7faf4] px-4 py-5"
+            role="log"
+          >
+            {messages.map((message) => (
+              <div
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                key={message.id}
+              >
+                <div
+                  className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-6 ${
+                    message.role === "user"
+                      ? "rounded-br-md bg-[#102312] text-white"
+                      : "rounded-bl-md border border-[#e5ecdf] bg-white text-[#344536]"
+                  }`}
+                >
+                  <p>{message.text}</p>
+                  {message.courses?.map((course) => (
+                    <Link
+                      className="mt-3 block rounded-xl border border-[#e5ecdf] bg-[#fbfdf9] p-3 transition hover:border-[#3cc74f] hover:bg-[#f4fbf2]"
+                      href={course.href}
+                      key={course.id}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <span className="flex items-center justify-between gap-2 font-semibold text-[#18331b]">
+                        <span className="flex items-center gap-2">
+                          <BookOpen aria-hidden="true" className="h-4 w-4 shrink-0 text-[#2ca949]" />
+                          {course.name}
+                        </span>
+                        <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
+                      </span>
+                      <span className="mt-1 block text-xs text-[#687669]">
+                        {course.difficulty} · {course.description}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {isThinking ? (
+              <p className="text-sm text-[#687669]" role="status">
+                Checking the course catalog…
+              </p>
+            ) : null}
+          </div>
+
+          {messages.length === 1 ? (
+            <div className="flex flex-wrap gap-2 border-t border-[#e5ecdf] bg-white px-4 py-3">
+              {STARTER_PROMPTS.map((prompt) => (
+                <button
+                  className="rounded-full border border-[#dce6d7] px-3 py-1.5 text-xs font-medium text-[#425344] transition hover:border-[#3cc74f] hover:bg-[#f4fbf2] disabled:opacity-50"
+                  disabled={isThinking}
+                  key={prompt}
+                  onClick={() => void sendMessage(prompt)}
+                  type="button"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          <form
+            className="flex items-center gap-2 border-t border-[#e5ecdf] bg-white p-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void sendMessage(input);
+            }}
+          >
+            <input
+              aria-label="Ask Omni Guide for a course recommendation"
+              className="min-w-0 flex-1 rounded-full bg-[#f3f6f0] px-4 py-3 text-sm text-[#243327] outline-none placeholder:text-[#899489] focus:ring-2 focus:ring-[#3cc74f]/50"
+              onChange={(event) => setInput(event.target.value)}
+              placeholder="What would you like to learn?"
+              value={input}
+            />
+            <button
+              aria-label="Send message"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#3cc74f] text-[#102312] transition hover:bg-[#31b643] disabled:opacity-50"
+              disabled={!input.trim() || isThinking}
+              type="submit"
+            >
+              <Send aria-hidden="true" className="h-4 w-4" />
+            </button>
+          </form>
+          <p className="bg-white px-4 pb-3 text-center text-[10px] text-[#849084]">
+            Recommendations use course titles and descriptions from Omni AI.
+          </p>
+        </section>
+      ) : null}
+
+      <button
+        aria-expanded={isOpen}
+        aria-label={isOpen ? "Close Omni Guide" : "Open Omni Guide course assistant"}
+        className="flex h-14 items-center gap-2 rounded-full bg-[#3cc74f] px-5 font-semibold text-[#102312] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#31b643]"
+        onClick={() => setIsOpen((open) => !open)}
+        type="button"
+      >
+        {isOpen ? (
+          <X aria-hidden="true" className="h-5 w-5" />
+        ) : (
+          <MessageCircle aria-hidden="true" className="h-5 w-5" />
+        )}
+        {isOpen ? "Close" : "Find a course"}
+      </button>
+    </div>
+  );
+}

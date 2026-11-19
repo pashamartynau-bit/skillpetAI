@@ -55,8 +55,8 @@ export async function POST(request: Request) {
           price_data: {
             currency: "usd",
             product_data: {
-              description: `SkillPet ${plan.label} subscription`,
-              name: `SkillPet ${plan.label} Plan`,
+              description: `Omni AI ${plan.label} subscription`,
+              name: `Omni AI ${plan.label} Plan`,
             },
             recurring: {
               interval: plan.interval,

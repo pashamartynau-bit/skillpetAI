@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk, Inter } from "next/font/google";
+import { CourseGuideChat } from "@/components/course-guide-chat";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -17,8 +18,26 @@ const monoFont = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Learn AI Skillz",
-  description: "Sign in and sign up flows powered by InsForge and Strapi.",
+  title: {
+    default: "Omni AI",
+    template: "%s | Omni AI",
+  },
+  applicationName: "Omni AI",
+  description:
+    "Find the right AI and technology courses, learn at your own pace, and track your progress with Omni AI.",
+  openGraph: {
+    title: "Omni AI",
+    description:
+      "Find the right AI and technology courses, learn at your own pace, and track your progress with Omni AI.",
+    siteName: "Omni AI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Omni AI",
+    description:
+      "Find the right AI and technology courses, learn at your own pace, and track your progress with Omni AI.",
+  },
 };
 
 export default function RootLayout({
@@ -34,6 +53,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <Toaster />
+        <CourseGuideChat />
       </body>
     </html>
   );
