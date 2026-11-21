@@ -108,34 +108,34 @@ export function BillingPageScreen({
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-      <section className="rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_32px_90px_-56px_rgba(34,46,84,0.5)] backdrop-blur md:p-8">
+      <section className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 p-6 shadow-[0_32px_90px_-56px_rgba(34,46,84,0.5)] backdrop-blur md:p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-[#eef9f0] px-4 py-2 text-sm font-semibold text-[#2ca949]">
               <Sparkles className="h-4 w-4" />
               Billing
             </div>
-            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.06em] text-[#16214d]">
+            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.06em] text-[#16214d] dark:text-foreground">
               Subscription & billing
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#697391]">
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#697391] dark:text-[#a8b7a6]">
               Subscribe with Stripe, unlock paid and freemium content, and manage your plan
               through the customer portal.
             </p>
           </div>
 
-          <div className="rounded-[1.5rem] border border-[#e7ebf3] bg-[#f8fbff] px-5 py-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7481a8]">
+          <div className="rounded-[1.5rem] border border-[#e7ebf3] bg-[#f8fbff] px-5 py-4 dark:border-white/12 dark:bg-[#1c2a20]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7481a8] dark:text-[#a8b7a6]">
               Current status
             </p>
-            <p className="mt-2 text-2xl font-semibold capitalize text-[#1b2559]">{statusLabel}</p>
+            <p className="mt-2 text-2xl font-semibold capitalize text-[#1b2559] dark:text-foreground">{statusLabel}</p>
             {billing?.stripeSubscriptionCurrentPeriodEnd ? (
-              <p className="mt-1 text-sm text-[#697391]">
+              <p className="mt-1 text-sm text-[#697391] dark:text-[#a8b7a6]">
                 Renews or expires on{" "}
                 {format(new Date(billing.stripeSubscriptionCurrentPeriodEnd), "PPP")}
               </p>
             ) : (
-              <p className="mt-1 text-sm text-[#697391]">No active renewal date yet.</p>
+              <p className="mt-1 text-sm text-[#697391] dark:text-[#a8b7a6]">No active renewal date yet.</p>
             )}
           </div>
         </div>
@@ -164,17 +164,17 @@ export function BillingPageScreen({
               return (
                 <article
                   key={planKey}
-                  className="rounded-[1.75rem] border border-[#e7ebf3] bg-[linear-gradient(180deg,rgba(250,252,255,0.96),rgba(255,255,255,0.98))] p-6 shadow-[0_18px_54px_-42px_rgba(34,46,84,0.35)]"
+                  className="rounded-[1.75rem] border border-[#e7ebf3] bg-[linear-gradient(180deg,rgba(250,252,255,0.96),rgba(255,255,255,0.98))] p-6 shadow-[0_18px_54px_-42px_rgba(34,46,84,0.35)] dark:border-white/12 dark:bg-[linear-gradient(180deg,rgba(22,36,26,0.96),rgba(16,25,18,0.94))]"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#6b79a3]">
+                      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#6b79a3] dark:text-[#a8b7a6]">
                         {plan.label}
                       </p>
-                      <p className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-[#16214d]">
+                      <p className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-[#16214d] dark:text-foreground">
                         {planKey === "monthly" ? "$5.99" : "$49.99"}
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-[#697391]">
+                      <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                         {planKey === "monthly"
                           ? "Flexible monthly access for all paid and locked freemium chapters."
                           : "Best value annual access for the full Omni AI learning catalog."}
@@ -216,7 +216,7 @@ export function BillingPageScreen({
           <Button
             onClick={() => void handlePortal()}
             disabled={!billing?.stripeCustomerId || pendingAction !== null}
-            className="h-12 rounded-2xl bg-[#eef3ff] px-5 font-semibold text-[#415bd0] hover:bg-[#e3ebff]"
+            className="h-12 rounded-2xl bg-[#eef3ff] px-5 font-semibold text-[#415bd0] hover:bg-[#e3ebff] dark:bg-accent/15 dark:text-accent-strong dark:hover:bg-accent/25"
           >
             {pendingAction === "portal" ? (
               <>
@@ -232,7 +232,7 @@ export function BillingPageScreen({
           </Button>
 
           {billing ? (
-            <div className="flex items-center rounded-2xl bg-[#f5f7fb] px-4 py-3 text-sm text-[#66708f]">
+            <div className="flex items-center rounded-2xl bg-[#f5f7fb] dark:bg-white/8 px-4 py-3 text-sm text-[#66708f] dark:text-[#a8b7a6]">
               Latest payment status: {billing.stripeLatestPaymentStatus ?? "not available yet"}
             </div>
           ) : null}

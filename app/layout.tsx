@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk, Inter } from "next/font/google";
 import { CourseGuideChat } from "@/components/course-guide-chat";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -48,12 +49,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${headingFont.variable} ${monoFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
-        <Toaster />
-        <CourseGuideChat />
+        <ThemeProvider>
+          {children}
+          <Toaster />
+          <CourseGuideChat />
+        </ThemeProvider>
       </body>
     </html>
   );

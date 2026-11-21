@@ -151,24 +151,24 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
   if (loadingProfile || !profile || !settings) {
     return (
       <section className="mx-auto grid w-full max-w-6xl gap-6 md:grid-cols-2">
-        <div className="h-56 animate-pulse rounded-[1.75rem] border border-white/70 bg-white/70" />
-        <div className="h-56 animate-pulse rounded-[1.75rem] border border-white/70 bg-white/70" />
-        <div className="h-72 animate-pulse rounded-[1.75rem] border border-white/70 bg-white/70 md:col-span-2" />
+        <div className="h-56 animate-pulse rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/70 dark:bg-[#152118]/90" />
+        <div className="h-56 animate-pulse rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/70 dark:bg-[#152118]/90" />
+        <div className="h-72 animate-pulse rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/70 dark:bg-[#152118]/90 md:col-span-2" />
       </section>
     );
   }
 
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-8">
-      <div className="flex flex-col gap-4 rounded-[1.9rem] border border-white/70 bg-white/78 p-6 shadow-[0_26px_80px_-56px_rgba(34,46,84,0.32)] backdrop-blur sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[1.9rem] border border-white/70 dark:border-white/10 bg-white/78 dark:bg-[#152118]/90 p-6 shadow-[0_26px_80px_-56px_rgba(34,46,84,0.32)] backdrop-blur sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#6a7593]">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#6a7593] dark:text-[#a8b7a6]">
             Profile
           </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-[#18224d]">
+          <h1 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-[#18224d] dark:text-foreground">
             Account, companion, and app settings
           </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#697391]">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
             Review your synced profile details, switch your selected character, and
             manage the settings that shape how Omni AI works for you.
           </p>
@@ -198,12 +198,12 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
       ) : null}
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-        <Card className="rounded-[1.75rem] border border-white/75 bg-white/88 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
+        <Card className="rounded-[1.75rem] border border-white/75 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
           <CardHeader className="pb-0">
-            <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d]">
+            <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d] dark:text-foreground">
               Profile details
             </CardTitle>
-            <CardDescription className="text-[#697391]">
+            <CardDescription className="text-[#697391] dark:text-[#a8b7a6]">
               Synced from your authenticated account and Strapi profile record.
             </CardDescription>
           </CardHeader>
@@ -213,11 +213,11 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
                 {getInitials(profile.displayName ?? profile.email)}
               </div>
               <div className="min-w-0">
-                <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
+                <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
                   {profile.displayName?.trim() || "Omni AI learner"}
                 </p>
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#697391]">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#f3f6fb] px-3 py-1">
+                <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#697391] dark:text-[#a8b7a6]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#f3f6fb] dark:bg-white/8 px-3 py-1">
                     <Mail className="h-3.5 w-3.5" />
                     {profile.email ?? "No email available"}
                   </span>
@@ -241,19 +241,19 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.75rem] border border-white/75 bg-white/88 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
+        <Card className="rounded-[1.75rem] border border-white/75 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
           <CardHeader className="pb-0">
-            <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d]">
+            <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d] dark:text-foreground">
               Current companion
             </CardTitle>
-            <CardDescription className="text-[#697391]">
+            <CardDescription className="text-[#697391] dark:text-[#a8b7a6]">
               Your selected character appears across the dashboard and learning views.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="rounded-[1.6rem] bg-[linear-gradient(160deg,rgba(236,249,239,0.96)_0%,rgba(227,244,229,0.92)_50%,rgba(242,249,240,0.95)_100%)] p-5">
+            <div className="rounded-[1.6rem] bg-[linear-gradient(160deg,rgba(236,249,239,0.96)_0%,rgba(227,244,229,0.92)_50%,rgba(242,249,240,0.95)_100%)] p-5 dark:bg-[linear-gradient(160deg,rgba(28,48,34,0.96)_0%,rgba(20,36,26,0.92)_100%)]">
               <div className="relative mx-auto flex min-h-[240px] items-center justify-center overflow-hidden rounded-[1.4rem]">
-                <div className="absolute right-2 top-2 rounded-full bg-white/85 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-strong">
+                <div className="absolute right-2 top-2 rounded-full bg-white/85 dark:bg-[#152118]/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-strong">
                   Active
                 </div>
                 {selectedCharacter ? (
@@ -271,10 +271,10 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
 
             <div className="mt-4 flex items-center justify-between gap-4">
               <div>
-                <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
+                <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
                   {selectedCharacter?.name ?? "No character selected"}
                 </p>
-                <p className="mt-1 text-sm text-[#697391]">
+                <p className="mt-1 text-sm text-[#697391] dark:text-[#a8b7a6]">
                   Pick a new buddy below and save when you&apos;re ready.
                 </p>
               </div>
@@ -284,7 +284,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
                   Pending change
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#f3f6fb] px-3 py-1 text-sm font-medium text-[#697391]">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#f3f6fb] dark:bg-white/8 px-3 py-1 text-sm font-medium text-[#697391] dark:text-[#a8b7a6]">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Saved
                 </span>
@@ -294,12 +294,12 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
         </Card>
       </div>
 
-      <Card className="rounded-[1.75rem] border border-white/75 bg-white/88 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
+      <Card className="rounded-[1.75rem] border border-white/75 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
         <CardHeader className="pb-0">
-          <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d]">
+          <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d] dark:text-foreground">
             Essential settings
           </CardTitle>
-          <CardDescription className="text-[#697391]">
+          <CardDescription className="text-[#697391] dark:text-[#a8b7a6]">
             The app uses these preferences for reminders and leaderboard visibility.
           </CardDescription>
         </CardHeader>
@@ -329,12 +329,12 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[1.75rem] border border-white/75 bg-white/88 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
+      <Card className="rounded-[1.75rem] border border-white/75 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
         <CardHeader className="pb-0">
-          <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d]">
+          <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d] dark:text-foreground">
             Change character
           </CardTitle>
-          <CardDescription className="text-[#697391]">
+          <CardDescription className="text-[#697391] dark:text-[#a8b7a6]">
             Choose a different companion without leaving the dashboard.
           </CardDescription>
         </CardHeader>
@@ -350,8 +350,8 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
                   onClick={() => setCharacterOverride(character.fileName)}
                   className={`group relative flex min-h-[220px] cursor-pointer flex-col items-center justify-between rounded-[1.6rem] border p-4 text-left transition-all ${
                     isSelected
-                      ? "border-[#36c844] bg-[#f7fdf7] shadow-[0_14px_34px_-24px_rgba(54,200,68,0.35)]"
-                      : "border-[#e6ebf4] bg-white hover:border-[#bfd7c2] hover:bg-[#fbfdfb]"
+                      ? "border-[#36c844] bg-[#f7fdf7] shadow-[0_14px_34px_-24px_rgba(54,200,68,0.35)] dark:bg-accent/15"
+                      : "border-[#e6ebf4] bg-white hover:border-[#bfd7c2] hover:bg-[#fbfdfb] dark:border-white/12 dark:bg-[#1c2a20] dark:hover:bg-[#243228]"
                   }`}
                 >
                   {isSelected ? (
@@ -368,7 +368,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
                       className="h-auto max-h-[150px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <p className="mt-3 text-lg font-semibold tracking-[-0.04em] text-[#18224d]">
+                  <p className="mt-3 text-lg font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                     {character.name}
                   </p>
                 </button>
@@ -378,19 +378,19 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
         </CardContent>
       </Card>
 
-      <Card className="rounded-[1.75rem] border border-white/75 bg-white/88 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
+      <Card className="rounded-[1.75rem] border border-white/75 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 shadow-[0_24px_80px_-56px_rgba(34,46,84,0.34)]">
         <CardHeader className="pb-0">
-          <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d]">
+          <CardTitle className="text-xl tracking-[-0.04em] text-[#18224d] dark:text-foreground">
             Account actions
           </CardTitle>
-          <CardDescription className="text-[#697391]">
+          <CardDescription className="text-[#697391] dark:text-[#a8b7a6]">
             Use this when you want to leave the app on this device.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-base font-semibold text-[#18224d]">Sign out of Omni AI</p>
-            <p className="mt-1 text-sm leading-6 text-[#697391]">
+            <p className="text-base font-semibold text-[#18224d] dark:text-foreground">Sign out of Omni AI</p>
+            <p className="mt-1 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
               This clears your local session and learning progress cache on this browser.
             </p>
           </div>
@@ -412,9 +412,9 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
 
 function DetailTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[1.2rem] border border-[#edf0f6] bg-[#fafbfd] p-4">
-      <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#7b84a0]">{label}</p>
-      <p className="mt-2 break-all text-sm font-medium text-[#18224d]">{value}</p>
+    <div className="rounded-[1.2rem] border border-[#edf0f6] bg-[#fafbfd] p-4 dark:border-white/12 dark:bg-[#1c2a20]">
+      <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#7b84a0] dark:text-[#a8b7a6]">{label}</p>
+      <p className="mt-2 break-all text-sm font-medium text-[#18224d] dark:text-foreground">{value}</p>
     </div>
   );
 }
@@ -431,10 +431,10 @@ function SettingRow({
   onCheckedChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-[1.2rem] border border-[#edf0f6] bg-[#fafbfd] p-4">
+    <div className="flex items-center justify-between gap-4 rounded-[1.2rem] border border-[#edf0f6] bg-[#fafbfd] p-4 dark:border-white/12 dark:bg-[#1c2a20]">
       <div className="min-w-0">
-        <p className="text-base font-semibold text-[#18224d]">{label}</p>
-        <p className="mt-1 text-sm leading-6 text-[#697391]">{description}</p>
+        <p className="text-base font-semibold text-[#18224d] dark:text-foreground">{label}</p>
+        <p className="mt-1 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">{description}</p>
       </div>
       <Switch checked={checked} onCheckedChange={onCheckedChange} />
     </div>

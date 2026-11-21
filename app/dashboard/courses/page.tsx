@@ -111,14 +111,14 @@ export default function ExploreCoursesPage() {
       ) : (
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="min-w-0">
-            <div className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_26px_90px_-58px_rgba(34,46,84,0.42)] backdrop-blur">
+            <div className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/78 dark:bg-[#152118]/90 p-6 shadow-[0_26px_90px_-58px_rgba(34,46,84,0.42)] backdrop-blur">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8b94ae]">
                 Course Library
               </p>
-              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.07em] text-[#16214d]">
+              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.07em] text-[#16214d] dark:text-foreground">
                 Explore Courses
               </h1>
-              <p className="mt-3 max-w-2xl text-base leading-7 text-[#697391]">
+              <p className="mt-3 max-w-2xl text-base leading-7 text-[#697391] dark:text-[#a8b7a6]">
                 Choose a path and keep building your AI skills with live course data
                 from Strapi.
               </p>
@@ -130,7 +130,7 @@ export default function ExploreCoursesPage() {
                     value={searchQuery}
                     onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder="Search courses by title or description"
-                    className="h-12 rounded-2xl border-[#e6eaf3] bg-white pl-11 text-sm shadow-[0_14px_34px_-28px_rgba(34,46,84,0.32)]"
+                    className="h-12 rounded-2xl border-[#e6eaf3] dark:border-white/12 bg-white dark:bg-[#1c2a20] pl-11 text-sm shadow-[0_14px_34px_-28px_rgba(34,46,84,0.32)]"
                   />
                 </label>
 
@@ -138,7 +138,7 @@ export default function ExploreCoursesPage() {
                   value={selectedDifficulty}
                   onValueChange={(value) => setSelectedDifficulty(value ?? ALL_DIFFICULTIES)}
                 >
-                  <SelectTrigger className="h-12 min-h-12 w-full rounded-2xl border-[#e6eaf3] bg-white px-4 py-0 text-sm shadow-[0_14px_34px_-28px_rgba(34,46,84,0.32)] lg:w-[220px]">
+                  <SelectTrigger className="h-12 min-h-12 w-full rounded-2xl border-[#e6eaf3] dark:border-white/12 bg-white dark:bg-[#1c2a20] px-4 py-0 text-sm shadow-[0_14px_34px_-28px_rgba(34,46,84,0.32)] lg:w-[220px]">
                     <SelectValue placeholder="Filter by difficulty" />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl">
@@ -156,11 +156,11 @@ export default function ExploreCoursesPage() {
               {coursesError ? (
                 <p className="text-sm text-[#b25b5b]">{coursesError}</p>
               ) : visibleCourses.length === 0 ? (
-                <div className="rounded-[1.75rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6">
-                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d]">
+                <div className="rounded-[1.75rem] border border-dashed border-[#d9deea] dark:border-white/12 bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6 dark:bg-[linear-gradient(180deg,rgba(24,38,28,0.92),rgba(18,28,22,0.96))]">
+                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                     No courses match this search
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#697391]">
+                  <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                     Try a different keyword or difficulty filter.
                   </p>
                 </div>
@@ -186,13 +186,13 @@ export default function ExploreCoursesPage() {
           </div>
 
           <aside className="flex flex-col gap-6">
-            <section className="rounded-[1.75rem] border border-white/70 bg-white/88 p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
+            <section className="rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d]">
+                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                     Weekly Streak
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-[#697391]">
+                  <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                     Active days are based on your saved course progress.
                   </p>
                 </div>
@@ -211,7 +211,7 @@ export default function ExploreCoursesPage() {
                 <span className="text-5xl font-semibold tracking-[-0.08em] text-[#7c67ff]">
                   {streakCount}
                 </span>
-                <span className="pb-2 text-sm font-medium text-[#697391]">
+                <span className="pb-2 text-sm font-medium text-[#697391] dark:text-[#a8b7a6]">
                   active day{streakCount === 1 ? "" : "s"} this week
                 </span>
               </div>
@@ -222,15 +222,15 @@ export default function ExploreCoursesPage() {
               />
             </section>
 
-            <section className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(243,240,255,0.9))] p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
-              <p className="text-xl font-semibold tracking-[-0.05em] text-[#18224d]">
+            <section className="overflow-hidden rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(243,240,255,0.9))] p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)] dark:bg-[linear-gradient(180deg,rgba(22,36,26,0.96),rgba(18,28,22,0.94))]">
+              <p className="text-xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
                 Keep Going
               </p>
-              <p className="mt-2 text-sm leading-6 text-[#697391]">
+              <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                 Pick up where you left off and keep your learning momentum moving.
               </p>
 
-              <div className="mt-6 flex justify-center rounded-[1.5rem] bg-[radial-gradient(circle_at_top,rgba(246,242,255,0.98),rgba(236,244,255,0.9))] p-4">
+              <div className="mt-6 flex justify-center rounded-[1.5rem] bg-[radial-gradient(circle_at_top,rgba(246,242,255,0.98),rgba(236,244,255,0.9))] p-4 dark:bg-[radial-gradient(circle_at_top,rgba(32,52,38,0.98),rgba(18,28,22,0.9))]">
                 <Image
                   src={selectedCharacterSrc}
                   alt={profile?.character?.name ?? "Selected character"}
@@ -243,7 +243,7 @@ export default function ExploreCoursesPage() {
 
               <Button
                 render={<Link href="/dashboard/progress" />}
-                className="mt-6 h-12 w-full rounded-2xl bg-[#efeaff] font-semibold text-[#6b4eff] hover:bg-[#e6deff]"
+                className="mt-6 h-12 w-full rounded-2xl bg-[#efeaff] font-semibold text-[#6b4eff] hover:bg-[#e6deff] dark:bg-accent/15 dark:text-accent-strong dark:hover:bg-accent/25"
               >
                 Go to Progress
                 <ArrowRight className="h-4 w-4" />
@@ -260,7 +260,7 @@ function ExploreCoursesSkeleton() {
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0">
-        <div className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_26px_90px_-58px_rgba(34,46,84,0.42)] backdrop-blur">
+        <div className="rounded-[2rem] border border-white/70 dark:border-white/10 bg-white/78 dark:bg-[#152118]/90 p-6 shadow-[0_26px_90px_-58px_rgba(34,46,84,0.42)] backdrop-blur">
           <Skeleton className="h-4 w-28 rounded-full" />
           <Skeleton className="mt-4 h-12 w-72 rounded-2xl" />
           <Skeleton className="mt-4 h-4 w-full max-w-2xl rounded-full" />
@@ -275,7 +275,7 @@ function ExploreCoursesSkeleton() {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={`course-skeleton-${index}`}
-              className="rounded-[1.75rem] border border-white/70 bg-white/86 p-5 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.45)]"
+              className="rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/86 dark:bg-[#152118]/90 p-5 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.45)]"
             >
               <Skeleton className="h-[176px] rounded-[1.5rem]" />
               <div className="mt-5 space-y-3">
@@ -296,7 +296,7 @@ function ExploreCoursesSkeleton() {
       </div>
 
       <aside className="flex flex-col gap-6">
-        <div className="rounded-[1.75rem] border border-white/70 bg-white/88 p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
+        <div className="rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-3">
               <Skeleton className="h-6 w-36 rounded-xl" />
@@ -315,7 +315,7 @@ function ExploreCoursesSkeleton() {
           </div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-white/70 bg-white/88 p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
+        <div className="rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 p-6 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.42)]">
           <Skeleton className="h-7 w-32 rounded-xl" />
           <Skeleton className="mt-3 h-4 w-full rounded-full" />
           <Skeleton className="mt-2 h-4 w-5/6 rounded-full" />

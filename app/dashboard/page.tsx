@@ -99,11 +99,11 @@ export default function DashboardPage() {
 
         <div className="relative grid items-center gap-4 lg:grid-cols-[minmax(0,1.35fr)_240px] lg:gap-6">
           <div className="max-w-3xl">
-            <p className="text-base font-medium tracking-[-0.03em] text-[#53607e] sm:text-lg">
+            <p className="text-base font-medium tracking-[-0.03em] text-[#53607e] sm:text-lg dark:text-[#b7c3b4]">
               Good Morning,{" "}
-              <span className="font-semibold text-[#1b2559]">{userName}</span>
+              <span className="font-semibold text-[#1b2559] dark:text-foreground">{userName}</span>
             </p>
-            <h1 className="mt-3 max-w-xl text-3xl font-semibold tracking-[-0.06em] text-[#16214d] sm:text-[2.7rem] sm:leading-[1.05]">
+            <h1 className="mt-3 max-w-xl text-3xl font-semibold tracking-[-0.06em] text-[#16214d] sm:text-[2.7rem] sm:leading-[1.05] dark:text-foreground">
               Let&apos;s learn something amazing today.
             </h1>
           </div>
@@ -125,13 +125,13 @@ export default function DashboardPage() {
 
       <div className="flex flex-col gap-8">
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-          <section className="rounded-[1.75rem] border border-white/70 bg-white/85 p-6 shadow-[0_26px_80px_-54px_rgba(34,46,84,0.45)] backdrop-blur">
+          <section className="rounded-[1.75rem] border border-white/70 bg-white/85 p-6 shadow-[0_26px_80px_-54px_rgba(34,46,84,0.45)] backdrop-blur dark:border-white/10 dark:bg-[#152118]/90">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xl font-semibold tracking-[-0.04em] text-[#18224d]">
+                <p className="text-xl font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                   Daily Streak
                 </p>
-                <p className="mt-2 text-sm leading-6 text-[#697391]">
+                <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                   A day counts toward your streak after you make progress in a course.
                 </p>
               </div>
@@ -144,7 +144,7 @@ export default function DashboardPage() {
               <span className="text-5xl font-semibold tracking-[-0.08em] text-accent-strong">
                 {completedStreakDays}
               </span>
-              <span className="pb-2 text-sm font-medium text-[#66708f]">
+              <span className="pb-2 text-sm font-medium text-[#66708f] dark:text-[#a8b7a6]">
                 days completed this week
               </span>
             </div>
@@ -156,9 +156,9 @@ export default function DashboardPage() {
             />
           </section>
 
-          <section className="rounded-[1.75rem] border border-white/70 bg-white/85 p-6 shadow-[0_26px_80px_-54px_rgba(34,46,84,0.45)] backdrop-blur">
+          <section className="rounded-[1.75rem] border border-white/70 bg-white/85 p-6 shadow-[0_26px_80px_-54px_rgba(34,46,84,0.45)] backdrop-blur dark:border-white/10 dark:bg-[#152118]/90">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-xl font-semibold tracking-[-0.04em] text-[#18224d]">
+              <p className="text-xl font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                 Continue Learning
               </p>
               {continueLearningCourse ? (
@@ -173,7 +173,7 @@ export default function DashboardPage() {
 
             {continueLearningCourse ? (
               <div className="mt-6 grid gap-5 md:grid-cols-[180px_minmax(0,1fr)]">
-                <div className="relative overflow-hidden rounded-[1.5rem] bg-[linear-gradient(160deg,rgba(236,249,239,0.96)_0%,rgba(227,244,229,0.92)_50%,rgba(242,249,240,0.95)_100%)] p-5">
+                <div className="relative overflow-hidden rounded-[1.5rem] bg-[linear-gradient(160deg,rgba(236,249,239,0.96)_0%,rgba(227,244,229,0.92)_50%,rgba(242,249,240,0.95)_100%)] p-5 dark:bg-[linear-gradient(160deg,rgba(28,48,34,0.96)_0%,rgba(20,36,26,0.92)_100%)]">
                   <div className="absolute right-0 bottom-0 h-20 w-20 rounded-full bg-accent/12 blur-2xl" />
                   <Image
                     src={continueLearningCourse.bannerSrc}
@@ -185,15 +185,15 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="flex min-w-0 flex-col justify-center">
-                  <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
+                  <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
                     {continueLearningCourse.name}
                   </p>
-                  <p className="mt-2 text-base text-[#697391]">
+                  <p className="mt-2 text-base text-[#697391] dark:text-[#a8b7a6]">
                     {getCourseSummary(continueLearningCourse)}
                   </p>
 
                   <div className="mt-6">
-                    <p className="text-sm leading-6 text-[#697391]">
+                    <p className="text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                       {continueLearningCourse.description}
                     </p>
                   </div>
@@ -210,14 +210,14 @@ export default function DashboardPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 flex  flex-col items-start justify-center rounded-[1.5rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6">
+              <div className="mt-6 flex flex-col items-start justify-center rounded-[1.5rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6 dark:border-white/15 dark:bg-[linear-gradient(180deg,rgba(24,38,28,0.92),rgba(18,28,22,0.96))]">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
                   <BookOpen className="h-6 w-6" />
                 </div>
-                <p className="mt-5 text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
+                <p className="mt-5 text-2xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
                   Start learning your first course
                 </p>
-                <p className="mt-2 max-w-md text-sm leading-6 text-[#697391]">
+                <p className="mt-2 max-w-md text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                   Enroll in an AI course to unlock guided chapters, track progress,
                   and keep your learning streak moving.
                 </p>
@@ -233,13 +233,13 @@ export default function DashboardPage() {
           </section>
         </div>
 
-        <section className="rounded-[1.75rem] border border-white/70 bg-white/72 p-6 shadow-[0_26px_80px_-56px_rgba(34,46,84,0.32)] backdrop-blur">
+        <section className="rounded-[1.75rem] border border-white/70 bg-white/72 p-6 shadow-[0_26px_80px_-56px_rgba(34,46,84,0.32)] backdrop-blur dark:border-white/10 dark:bg-[#152118]/80">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xl font-semibold tracking-[-0.04em] text-[#18224d]">
+              <p className="text-xl font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                 Recommended For You
               </p>
-              <p className="mt-2 text-sm leading-6 text-[#697391]">
+              <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                 Short, practical AI courses chosen to keep your momentum up.
               </p>
             </div>
@@ -251,10 +251,10 @@ export default function DashboardPage() {
                 {recommendedCourses.map((course) => (
                   <article
                     key={course.id}
-                    className="flex h-full min-h-[340px] flex-col rounded-[1.5rem] border border-[#edf0f6] bg-white/92 p-5 shadow-[0_20px_60px_-54px_rgba(34,46,84,0.45)]"
+                    className="flex h-full min-h-[340px] flex-col rounded-[1.5rem] border border-[#edf0f6] bg-white/92 p-5 shadow-[0_20px_60px_-54px_rgba(34,46,84,0.45)] dark:border-white/10 dark:bg-[#1a2820]"
                   >
                     <div className="relative overflow-hidden rounded-[1.35rem] ">
-                      <div className="absolute top-3 right-3 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-strong">
+                      <div className="absolute top-3 right-3 rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-strong dark:bg-[#101910]/80">
                         AI
                       </div>
                       <Image
@@ -267,7 +267,7 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="mt-5 flex flex-1 flex-col">
-                      <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
+                      <p className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
                         {course.name}
                       </p>
                       <p className="mt-3 flex-1 text-sm font-medium text-accent-strong">
@@ -287,21 +287,21 @@ export default function DashboardPage() {
               </div>
             ) : !loadingCourses && !coursesError ? (
               courses.length === 0 ? (
-                <div className="rounded-[1.5rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6">
-                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d]">
+                <div className="rounded-[1.5rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6 dark:border-white/15 dark:bg-[linear-gradient(180deg,rgba(24,38,28,0.92),rgba(18,28,22,0.96))]">
+                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                     No published courses available yet
                   </p>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#697391]">
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                     Publish one or more course entries in Strapi to show them on the
                     dashboard and enable `/courses/[slug]` pages.
                   </p>
                 </div>
               ) : (
-                <div className="rounded-[1.5rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6">
-                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d]">
+                <div className="rounded-[1.5rem] border border-dashed border-[#d9deea] bg-[linear-gradient(180deg,rgba(244,246,252,0.92),rgba(255,255,255,0.96))] p-6 dark:border-white/15 dark:bg-[linear-gradient(180deg,rgba(24,38,28,0.92),rgba(18,28,22,0.96))]">
+                  <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">
                     You&apos;ve enrolled in all available courses!
                   </p>
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#697391]">
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                     Check your &quot;Continue Learning&quot; section above to access your courses and track your progress.
                   </p>
                 </div>
@@ -311,10 +311,10 @@ export default function DashboardPage() {
         </section>
 
         {loadingProfile ? (
-          <p className="text-sm text-[#6b7595]">Loading your dashboard...</p>
+          <p className="text-sm text-[#6b7595] dark:text-[#a8b7a6]">Loading your dashboard...</p>
         ) : null}
         {loadingCourses ? (
-          <p className="text-sm text-[#6b7595]">Loading courses from Strapi...</p>
+          <p className="text-sm text-[#6b7595] dark:text-[#a8b7a6]">Loading courses from Strapi...</p>
         ) : null}
         {coursesError ? (
           <p className="text-sm text-[#b25b5b]">{coursesError}</p>

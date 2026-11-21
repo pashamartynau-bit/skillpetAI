@@ -28,7 +28,7 @@ export function CourseCard({
 }: CourseCardProps) {
   return (
     <article
-      className="flex h-full flex-col rounded-[1.75rem] border border-white/70 bg-white/86 p-5 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.45)]"
+      className="flex h-full flex-col rounded-[1.75rem] border border-white/70 dark:border-white/10 bg-white/86 dark:bg-[#152118]/90 p-5 shadow-[0_24px_72px_-52px_rgba(34,46,84,0.45)]"
     >
       <div className="flex min-h-[176px] items-center justify-center overflow-hidden rounded-[1.5rem] ">
         <Image
@@ -42,7 +42,7 @@ export function CourseCard({
 
       <div className="mt-5 flex flex-1 flex-col">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d]">
+          <h2 className="text-2xl font-semibold tracking-[-0.05em] text-[#18224d] dark:text-foreground">
             {course.name}
           </h2>
           <span className="rounded-full bg-[#eef3ff] px-3 py-1 text-xs font-semibold text-[#5667d8]">
@@ -50,7 +50,7 @@ export function CourseCard({
           </span>
         </div>
 
-        <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#697391]">
+        <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
           {course.description}
         </p>
 
@@ -61,7 +61,7 @@ export function CourseCard({
                 <ProgressTrack className="h-2 rounded-full bg-[#edf0f7]">
                   <ProgressIndicator className="bg-[linear-gradient(90deg,#7c67ff_0%,#9f8cff_100%)]" />
                 </ProgressTrack>
-                <div className="ml-auto text-xs font-semibold text-[#697391]">
+                <div className="ml-auto text-xs font-semibold text-[#697391] dark:text-[#a8b7a6]">
                   {progressPercent}%
                 </div>
               </Progress>
@@ -74,7 +74,7 @@ export function CourseCard({
             </>
           ) : (
             <>
-              <div className="flex items-center gap-2 text-sm text-[#697391]">
+              <div className="flex items-center gap-2 text-sm text-[#697391] dark:text-[#a8b7a6]">
                 <BookOpen className="h-4 w-4 text-[#8b94ae]" />
                 <span>Not started yet</span>
               </div>

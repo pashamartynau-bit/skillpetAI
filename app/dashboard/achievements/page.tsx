@@ -92,18 +92,18 @@ export default function AchievementsPage() {
 
   return (
     <section className="mx-auto flex w-full max-w-7xl flex-col gap-6 pb-8">
-      <div className="rounded-[2rem] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(244,249,255,0.88))] p-6 shadow-[0_32px_90px_-60px_rgba(25,45,94,0.4)] sm:p-8">
+      <div className="rounded-[2rem] border border-white/80 dark:border-white/10 bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(244,249,255,0.88))] p-6 shadow-[0_32px_90px_-60px_rgba(25,45,94,0.4)] sm:p-8 dark:bg-[linear-gradient(135deg,rgba(22,36,26,0.96),rgba(16,25,18,0.92))]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h1 className="text-4xl font-semibold tracking-[-0.08em] text-[#16214d] sm:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-[-0.08em] text-[#16214d] dark:text-foreground sm:text-5xl">
               Achievements
             </h1>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-[#6c7590] sm:text-lg">
+            <p className="mt-3 max-w-2xl text-base leading-7 text-[#6c7590] dark:text-[#a8b7a6] sm:text-lg">
               Track your progress, rewards, and ranking. ✨
             </p>
           </div>
 
-          <div className="self-start rounded-full border border-white/80 bg-white/88 px-4 py-3 text-sm text-[#68728d] shadow-[0_24px_60px_-40px_rgba(27,44,90,0.35)]">
+          <div className="self-start rounded-full border border-white/80 dark:border-white/10 bg-white/88 dark:bg-[#152118]/90 px-4 py-3 text-sm text-[#68728d] dark:text-[#a8b7a6] shadow-[0_24px_60px_-40px_rgba(27,44,90,0.35)]">
             Updated today
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function AchievementsPage() {
         />
       </div>
 
-      <section className="overflow-hidden rounded-[2rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(249,251,255,0.92))] shadow-[0_32px_90px_-60px_rgba(25,45,94,0.4)]">
+      <section className="overflow-hidden rounded-[2rem] border border-white/80 dark:border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(249,251,255,0.92))] shadow-[0_32px_90px_-60px_rgba(25,45,94,0.4)] dark:bg-[linear-gradient(180deg,rgba(22,36,26,0.96),rgba(16,25,18,0.94))]">
         <div className="flex flex-col gap-4 border-b border-[#eef1f6] px-5 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[radial-gradient(circle_at_35%_35%,#e9fff0_0%,#ccf6d9_65%,#a4e8bf_100%)] text-[#18aa57] shadow-[0_18px_36px_-26px_rgba(24,170,87,0.5)]">
@@ -215,21 +215,21 @@ export default function AchievementsPage() {
               />
             </div>
             <div>
-              <h2 className="text-2xl font-semibold tracking-[-0.06em] text-[#16214d]">
+              <h2 className="text-2xl font-semibold tracking-[-0.06em] text-[#16214d] dark:text-foreground">
                 Top 10 Leaderboard
               </h2>
-              <p className="mt-1 text-sm text-[#6c7590]">
+              <p className="mt-1 text-sm text-[#6c7590] dark:text-[#a8b7a6]">
                 Ranked by gems earned across all learners.
               </p>
             </div>
           </div>
 
-          <div className="text-sm text-[#6c7590]">Updated today</div>
+          <div className="text-sm text-[#6c7590] dark:text-[#a8b7a6]">Updated today</div>
         </div>
 
         <div className="px-3 pb-3 pt-4 sm:px-4 sm:pb-4">
-          <div className="overflow-hidden rounded-[1.5rem] border border-[#edf0f5] bg-white/90">
-            <div className="hidden grid-cols-[88px_minmax(0,1.4fr)_140px_120px] gap-4 bg-[linear-gradient(180deg,#f8fafc_0%,#f3f6fb_100%)] px-5 py-4 text-sm font-medium text-[#60708f] md:grid">
+          <div className="overflow-hidden rounded-[1.5rem] border border-[#edf0f5] dark:border-white/12 bg-white/90 dark:bg-[#152118]/90">
+            <div className="hidden grid-cols-[88px_minmax(0,1.4fr)_140px_120px] gap-4 bg-[linear-gradient(180deg,#f8fafc_0%,#f3f6fb_100%)] px-5 py-4 text-sm font-medium text-[#60708f] dark:bg-[linear-gradient(180deg,#1a2820_0%,#152118_100%)] dark:text-[#a8b7a6] md:grid">
               <span>Rank</span>
               <span>User</span>
               <span>Gems</span>
@@ -241,12 +241,12 @@ export default function AchievementsPage() {
                 {Array.from({ length: 7 }).map((_, index) => (
                   <div
                     key={`achievement-row-${index}`}
-                    className="h-20 animate-pulse rounded-[1.25rem] bg-[#f4f6fa]"
+                    className="h-20 animate-pulse rounded-[1.25rem] bg-[#f4f6fa] dark:bg-white/8"
                   />
                 ))}
               </div>
             ) : leaderboard.length === 0 ? (
-              <div className="p-6 text-sm text-[#697391]">No leaderboard data available yet.</div>
+              <div className="p-6 text-sm text-[#697391] dark:text-[#a8b7a6]">No leaderboard data available yet.</div>
             ) : (
               <div className="divide-y divide-[#eef1f6]">
                 {leaderboard.map((entry, index) => {
@@ -260,7 +260,7 @@ export default function AchievementsPage() {
                         "grid gap-3 px-4 py-4 transition-colors md:grid-cols-[88px_minmax(0,1.4fr)_140px_120px] md:items-center md:px-5",
                         entry.isCurrentUser
                           ? "bg-[linear-gradient(90deg,rgba(232,251,238,0.94),rgba(242,255,247,0.88))] shadow-[inset_0_0_0_1px_rgba(60,201,113,0.55)]"
-                          : "bg-white/95",
+                          : "bg-white/95 dark:bg-[#152118]/90",
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -294,7 +294,7 @@ export default function AchievementsPage() {
                           <p
                             className={cn(
                               "truncate text-base font-semibold tracking-[-0.04em]",
-                              entry.isCurrentUser ? "text-[#10934a]" : "text-[#18224d]",
+                              entry.isCurrentUser ? "text-[#10934a]" : "text-[#18224d] dark:text-foreground",
                             )}
                           >
                             {entry.isCurrentUser ? `You (${entry.displayName})` : entry.displayName}
@@ -371,7 +371,7 @@ function AchievementCard({
   value: number;
 }) {
   return (
-    <section className="rounded-[1.75rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(248,251,255,0.9))] p-6 shadow-[0_28px_76px_-56px_rgba(34,46,84,0.42)]">
+    <section className="rounded-[1.75rem] border border-white/80 dark:border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(248,251,255,0.9))] p-6 shadow-[0_28px_76px_-56px_rgba(34,46,84,0.42)] dark:bg-[linear-gradient(180deg,rgba(22,36,26,0.96),rgba(16,25,18,0.94))]">
       <div className="flex items-start gap-4">
         <div
           className={cn(
@@ -383,7 +383,7 @@ function AchievementCard({
         </div>
 
         <div className="min-w-0 pt-2">
-          <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d]">{label}</p>
+          <p className="text-lg font-semibold tracking-[-0.04em] text-[#18224d] dark:text-foreground">{label}</p>
         </div>
       </div>
 
@@ -424,16 +424,16 @@ function StatCell({
   value: string;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-[#f8fafc] px-4 py-3 md:bg-transparent md:px-0 md:py-0">
-      <div className="flex items-center gap-2 text-sm text-[#6c7590] md:hidden">
+    <div className="flex items-center justify-between rounded-2xl bg-[#f8fafc] dark:bg-white/8 px-4 py-3 md:bg-transparent md:px-0 md:py-0">
+      <div className="flex items-center gap-2 text-sm text-[#6c7590] dark:text-[#a8b7a6] md:hidden">
         {icon}
         <span>{label}</span>
       </div>
-      <div className="hidden items-center gap-2 text-base font-semibold text-[#18224d] md:flex">
+      <div className="hidden items-center gap-2 text-base font-semibold text-[#18224d] dark:text-foreground md:flex">
         {icon}
         <span>{value}</span>
       </div>
-      <div className="text-base font-semibold text-[#18224d] md:hidden">{value}</div>
+      <div className="text-base font-semibold text-[#18224d] dark:text-foreground md:hidden">{value}</div>
     </div>
   );
 }
@@ -448,7 +448,7 @@ function getRankStyle(rank: number) {
 
   if (rank === 2) {
     return {
-      className: "border-[#d3dbe6] bg-[linear-gradient(180deg,#edf2f8_0%,#c9d3df_100%)] text-[#6c7b8e]",
+      className: "border-[#d3dbe6] dark:border-white/12 bg-[linear-gradient(180deg,#edf2f8_0%,#c9d3df_100%)] text-[#6c7b8e]",
       label: "2",
     };
   }
@@ -461,7 +461,7 @@ function getRankStyle(rank: number) {
   }
 
   return {
-    className: "border-[#e2e8f2] bg-[#f4f7fb] text-[#425272]",
+    className: "border-[#e2e8f2] dark:border-white/12 bg-[#f4f7fb] dark:bg-white/8 text-[#425272]",
     label: String(rank),
   };
 }

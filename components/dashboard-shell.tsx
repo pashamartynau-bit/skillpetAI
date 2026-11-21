@@ -44,6 +44,7 @@ import {
 } from "@/lib/learning-progress";
 import { fetchUserProfile } from "@/lib/profile-api";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -270,7 +271,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
       >
         <SidebarProvider
           defaultOpen
-          className="bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)]"
+          className="bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] dark:bg-[radial-gradient(circle_at_top_left,#1a2a1e_0%,#101910_48%,#0c140f_100%)]"
         >
           <DashboardShellInner
             headerStats={headerStats}
@@ -392,7 +393,7 @@ function DashboardShellInner({
           {loadingBilling ? (
             <div
               className={cn(
-                "rounded-[1.5rem] border border-sidebar-border/80 bg-[linear-gradient(180deg,rgba(232,255,230,0.95),rgba(213,245,212,0.95))] text-sidebar-foreground shadow-[0_18px_40px_-28px_rgba(16,35,18,0.35)]",
+                "rounded-[1.5rem] border border-sidebar-border/80 bg-[linear-gradient(180deg,rgba(232,255,230,0.95),rgba(213,245,212,0.95))] text-sidebar-foreground shadow-[0_18px_40px_-28px_rgba(16,35,18,0.35)] dark:bg-[linear-gradient(180deg,rgba(32,58,38,0.95),rgba(22,40,28,0.95))]",
                 isCollapsed ? "p-2" : "p-4",
               )}
             >
@@ -402,12 +403,12 @@ function DashboardShellInner({
                   isCollapsed ? "justify-center" : "items-start gap-3",
                 )}
               >
-                <Skeleton className="h-10 w-10 rounded-2xl bg-white/70" />
+                <Skeleton className="h-10 w-10 rounded-2xl bg-white/70 dark:bg-white/10" />
                 {!isCollapsed ? (
                   <div className="flex-1 space-y-2">
-                    <Skeleton className="h-5 w-28 bg-white/70" />
-                    <Skeleton className="h-4 w-full bg-white/60" />
-                    <Skeleton className="h-4 w-4/5 bg-white/60" />
+                    <Skeleton className="h-5 w-28 bg-white/70 dark:bg-white/10" />
+                    <Skeleton className="h-4 w-full bg-white/60 dark:bg-white/10" />
+                    <Skeleton className="h-4 w-4/5 bg-white/60 dark:bg-white/10" />
                   </div>
                 ) : null}
               </div>
@@ -417,7 +418,7 @@ function DashboardShellInner({
           {showUpgradeCard ? (
             <div
               className={cn(
-                "rounded-[1.5rem] border border-sidebar-border/80 bg-[linear-gradient(180deg,rgba(232,255,230,0.95),rgba(213,245,212,0.95))] text-sidebar-foreground shadow-[0_18px_40px_-28px_rgba(16,35,18,0.35)]",
+                "rounded-[1.5rem] border border-sidebar-border/80 bg-[linear-gradient(180deg,rgba(232,255,230,0.95),rgba(213,245,212,0.95))] text-sidebar-foreground shadow-[0_18px_40px_-28px_rgba(16,35,18,0.35)] dark:bg-[linear-gradient(180deg,rgba(32,58,38,0.95),rgba(22,40,28,0.95))]",
                 isCollapsed ? "p-2" : "p-4",
               )}
             >
@@ -427,7 +428,7 @@ function DashboardShellInner({
                   isCollapsed ? "justify-center" : "items-start gap-3",
                 )}
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/80 text-accent-strong">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/80 text-accent-strong dark:bg-white/10">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 {!isCollapsed ? (
@@ -453,7 +454,7 @@ function DashboardShellInner({
           {showManageBilling ? (
             <div
               className={cn(
-                "rounded-[1.5rem] border border-sidebar-border/80 bg-white/80 text-sidebar-foreground shadow-[0_18px_40px_-28px_rgba(16,35,18,0.2)]",
+                "rounded-[1.5rem] border border-sidebar-border/80 bg-white/80 text-sidebar-foreground shadow-[0_18px_40px_-28px_rgba(16,35,18,0.2)] dark:bg-[#1c2a20]/80",
                 isCollapsed ? "p-2" : "p-4",
               )}
             >
@@ -463,7 +464,7 @@ function DashboardShellInner({
                   isCollapsed ? "justify-center" : "items-start gap-3",
                 )}
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#eef3ff] text-[#415bd0]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#eef3ff] text-[#415bd0] dark:bg-accent/15 dark:text-accent-strong">
                   <CreditCard className="h-5 w-5" />
                 </div>
                 {!isCollapsed ? (
@@ -476,7 +477,7 @@ function DashboardShellInner({
                       type="button"
                       onClick={() => void onManageBilling()}
                       disabled={pendingBillingAction !== null}
-                      className="mt-4 h-10 rounded-xl bg-[#eef3ff] px-4 text-sm font-semibold text-[#415bd0] hover:bg-[#e3ebff]"
+                      className="mt-4 h-10 rounded-xl bg-[#eef3ff] px-4 text-sm font-semibold text-[#415bd0] hover:bg-[#e3ebff] dark:bg-accent/15 dark:text-accent-strong dark:hover:bg-accent/25"
                     >
                       {pendingBillingAction === "portal" ? (
                         <>
@@ -529,10 +530,10 @@ function DashboardShellInner({
       </Sidebar>
 
       <SidebarInset className="min-h-svh bg-transparent">
-        <header className="sticky top-0 z-30 w-full border-b border-border/60 bg-[rgba(238,244,230,0.82)] backdrop-blur-xl">
+        <header className="sticky top-0 z-30 w-full border-b border-border/60 bg-[rgba(238,244,230,0.82)] backdrop-blur-xl dark:bg-[rgba(16,24,18,0.82)]">
           <div className="flex min-h-20 items-center justify-between gap-4 px-4 py-4 md:px-8">
             <div className="flex items-center gap-3">
-              <SidebarTrigger className="h-11 w-11 rounded-full border border-border/80 bg-white/80 text-foreground shadow-sm hover:bg-white" />
+              <SidebarTrigger className="h-11 w-11 rounded-full border border-border/80 bg-white/80 text-foreground shadow-sm hover:bg-white dark:bg-[#1c2a20] dark:hover:bg-[#243228]" />
               <div className="hidden sm:block">
                 <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-muted">
                   Dashboard
@@ -544,6 +545,7 @@ function DashboardShellInner({
             </div>
 
             <div className="ml-auto flex items-center justify-end gap-2 sm:gap-3">
+              <ThemeToggle />
               <HoverCard>
                 <HoverCardTrigger
                   render={
@@ -556,7 +558,7 @@ function DashboardShellInner({
                 />
                 <HoverCardContent
                   align="end"
-                  className="w-80 p-5 rounded-2xl bg-white/95 border border-border/80 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl"
+                  className="w-80 p-5 rounded-2xl border border-border/80 bg-white/95 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl dark:bg-[#172119]/95"
                 >
                   <div className="flex flex-col gap-3 text-left">
                     <div className="flex items-center gap-2 pb-2 border-b border-border/60">
@@ -589,7 +591,7 @@ function DashboardShellInner({
                 />
                 <HoverCardContent
                   align="end"
-                  className="w-80 p-5 rounded-2xl bg-white/95 border border-border/80 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl"
+                  className="w-80 p-5 rounded-2xl border border-border/80 bg-white/95 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl dark:bg-[#172119]/95"
                 >
                   <div className="flex flex-col gap-3 text-left">
                     <div className="flex items-center gap-2 pb-2 border-b border-border/60">
@@ -621,7 +623,7 @@ function DashboardShellInner({
                 />
                 <HoverCardContent
                   align="end"
-                  className="w-80 p-5 rounded-2xl bg-white/95 border border-border/80 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl"
+                  className="w-80 p-5 rounded-2xl border border-border/80 bg-white/95 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl dark:bg-[#172119]/95"
                 >
                   <div className="flex flex-col gap-3 text-left">
                     <div className="flex items-center gap-2 pb-2 border-b border-border/60">
@@ -678,7 +680,7 @@ function HeaderStat({
     <button
       type="button"
       className={cn(
-        "flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full border border-border/70 bg-white/78 px-3 shadow-[0_14px_34px_-26px_rgba(16,35,18,0.32)] cursor-pointer hover:bg-white hover:scale-102 hover:shadow-[0_10px_25px_-15px_rgba(16,35,18,0.25)] transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+        "flex h-11 min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-border/70 bg-white/78 px-3 shadow-[0_14px_34px_-26px_rgba(16,35,18,0.32)] transition-all hover:scale-102 hover:bg-white hover:shadow-[0_10px_25px_-15px_rgba(16,35,18,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:bg-[#1c2a20] dark:hover:bg-[#243228]",
         className
       )}
       {...props}
@@ -709,7 +711,7 @@ function SelectedCharacterAvatar({
     <button
       type="button"
       className={cn(
-        "flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white/82 shadow-[0_18px_40px_-28px_rgba(16,35,18,0.32)] cursor-pointer hover:bg-white hover:scale-102 hover:shadow-[0_10px_25px_-15px_rgba(16,35,18,0.25)] transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+        "flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-border/70 bg-white/82 shadow-[0_18px_40px_-28px_rgba(16,35,18,0.32)] transition-all hover:scale-102 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent dark:bg-[#1c2a20] dark:hover:bg-[#243228]",
         loading && "animate-pulse",
         className
       )}
@@ -752,7 +754,7 @@ function ProfileAvatarPopover({
       />
       <HoverCardContent
         align="end"
-        className="w-72 p-4 rounded-2xl bg-white/95 border border-border/80 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl"
+        className="w-72 rounded-2xl border border-border/80 bg-white/95 p-4 shadow-[0_20px_50px_rgba(16,35,18,0.15)] backdrop-blur-xl dark:bg-[#172119]/95"
       >
         <div className="flex flex-col gap-3 text-left">
           <div className="flex items-center gap-3 pb-3 border-b border-border/60">
@@ -781,7 +783,7 @@ function ProfileAvatarPopover({
             <Link
               href="/dashboard/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground hover:bg-slate-50 transition-colors"
+              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-slate-50 dark:hover:bg-white/10"
             >
               <User className="h-4 w-4 text-muted-foreground" />
               Account Settings
@@ -789,7 +791,7 @@ function ProfileAvatarPopover({
             <Link
               href="/dashboard/billing"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-medium text-foreground hover:bg-slate-50 transition-colors cursor-pointer w-full"
+              className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-medium text-foreground transition-colors hover:bg-slate-50 dark:hover:bg-white/10"
             >
               <CreditCard className="h-4 w-4 text-muted-foreground" />
               Billing & Plan
@@ -804,7 +806,7 @@ function ProfileAvatarPopover({
               void handleSignOut();
             }}
             disabled={isSigningOut}
-            className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-medium text-destructive hover:bg-rose-50/50 transition-colors cursor-pointer w-full disabled:opacity-50"
+            className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-medium text-destructive transition-colors hover:bg-rose-50/50 disabled:opacity-50 dark:hover:bg-rose-500/10"
           >
             <LogOut className="h-4 w-4" />
             {isSigningOut ? "Signing out..." : "Sign Out"}

@@ -36,8 +36,8 @@ export function WeeklyStreakCalendar({
                     ? "flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft shadow-[0_8px_20px_-16px_rgba(60,199,79,0.45)]"
                     : "flex h-12 w-12 items-center justify-center rounded-full bg-accent-soft shadow-[0_12px_28px_-20px_rgba(60,199,79,0.45)]"
                   : isSm
-                  ? "flex h-10 w-10 items-center justify-center rounded-full bg-[#f3f4f7]"
-                  : "flex h-12 w-12 items-center justify-center rounded-full bg-[#f3f4f7]"
+                  ? "flex h-10 w-10 items-center justify-center rounded-full bg-[#f3f4f7] dark:bg-white/10"
+                  : "flex h-12 w-12 items-center justify-center rounded-full bg-[#f3f4f7] dark:bg-white/10"
               }
             >
               {completed ? (
@@ -53,15 +53,15 @@ export function WeeklyStreakCalendar({
                   }}
                 />
               ) : (
-                <Zap className={isSm ? "h-4 w-4 text-[#b8bfce]" : "h-5 w-5 text-[#b8bfce]"} />
+                <Zap className={isSm ? "h-4 w-4 text-[#b8bfce] dark:text-[#8ea094]" : "h-5 w-5 text-[#b8bfce] dark:text-[#8ea094]"} />
               )}
             </div>
             <div className="text-center">
-              <p className={isSm ? "text-xs font-medium text-[#697391]" : "text-sm font-medium text-[#505a78]"}>
+              <p className={isSm ? "text-xs font-medium text-[#697391] dark:text-[#a8b7a6]" : "text-sm font-medium text-[#505a78] dark:text-[#c5d2c2]"}>
                 {day.dayLabel}
               </p>
               {showStatusText && (
-                <p className="mt-1 text-xs text-[#8a92ac]">
+                <p className="mt-1 text-xs text-[#8a92ac] dark:text-[#8ea094]">
                   {completed ? "Active" : "Idle"}
                 </p>
               )}
