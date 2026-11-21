@@ -1,14 +1,15 @@
 import { normalizeCourseAccessType, type CourseAccessType } from "@/lib/billing";
+import { getSanityClient } from "@/lib/sanity";
 
-export type StrapiCourseMedia = {
+export type CmsCourseMedia = {
   alternativeText?: string | null;
   height?: number | null;
   url?: string | null;
   width?: number | null;
 };
 
-export type StrapiCourse = {
-  chapters?: StrapiCourseChapter[] | null;
+export type CmsCourse = {
+  chapters?: CmsCourseChapter[] | null;
   difficultyLevel?: string | null;
   documentId: string;
   estimatedMinutes?: number | null;
@@ -19,13 +20,13 @@ export type StrapiCourse = {
   shortDescription?: string | null;
   slug?: string | null;
   sortOrder?: number | null;
-  banner?: StrapiCourseMedia | null;
+  banner?: CmsCourseMedia | null;
   accessType?: string | null;
 };
 
-export type StrapiCourseChapter = {
+export type CmsCourseChapter = {
   chapterNumber?: number | null;
-  contentBlocks?: StrapiChapterContentBlock[] | null;
+  contentBlocks?: CmsChapterContentBlock[] | null;
   description?: string | null;
   documentId: string;
   id: number;
@@ -35,28 +36,28 @@ export type StrapiCourseChapter = {
   emoji?: string | null;
 };
 
-export type StrapiChapterContentBlock =
-  | StrapiTheoryBlock
-  | StrapiMultipleChoiceBlock
-  | StrapiFillInTheBlankBlock
-  | StrapiTrueFalseBlock
-  | StrapiYesNoBlock
-  | StrapiMatchingBlock
-  | StrapiCodeExerciseBlock
-  | StrapiUnknownBlock;
+export type CmsChapterContentBlock =
+  | CmsTheoryBlock
+  | CmsMultipleChoiceBlock
+  | CmsFillInTheBlankBlock
+  | CmsTrueFalseBlock
+  | CmsYesNoBlock
+  | CmsMatchingBlock
+  | CmsCodeExerciseBlock
+  | CmsUnknownBlock;
 
-type StrapiBaseContentBlock = {
+type CmsBaseContentBlock = {
   __component?: string | null;
-  id?: number | null;
+  id?: string | number | null;
   title?: string | null;
 };
 
-type StrapiTheoryBlock = StrapiBaseContentBlock & {
+type CmsTheoryBlock = CmsBaseContentBlock & {
   __component?: "learning.theory-block";
   bodyMarkdown?: string | null;
 };
 
-type StrapiMultipleChoiceBlock = StrapiBaseContentBlock & {
+type CmsMultipleChoiceBlock = CmsBaseContentBlock & {
   __component?: "learning.multiple-choice-block";
   correctFeedback?: string | null;
   incorrectFeedback?: string | null;
@@ -65,7 +66,7 @@ type StrapiMultipleChoiceBlock = StrapiBaseContentBlock & {
   options?: unknown;
 };
 
-type StrapiFillInTheBlankBlock = StrapiBaseContentBlock & {
+type CmsFillInTheBlankBlock = CmsBaseContentBlock & {
   __component?: "learning.fill-in-the-blank-block";
   acceptedAnswers?: unknown;
   answer?: string | null;
@@ -76,7 +77,7 @@ type StrapiFillInTheBlankBlock = StrapiBaseContentBlock & {
   prompt?: string | null;
 };
 
-type StrapiTrueFalseBlock = StrapiBaseContentBlock & {
+type CmsTrueFalseBlock = CmsBaseContentBlock & {
   __component?: "learning.true-false-block";
   correctAnswer?: boolean | string | null;
   correctFeedback?: string | null;
@@ -84,7 +85,7 @@ type StrapiTrueFalseBlock = StrapiBaseContentBlock & {
   statement?: string | null;
 };
 
-type StrapiYesNoBlock = StrapiBaseContentBlock & {
+type CmsYesNoBlock = CmsBaseContentBlock & {
   __component?: "learning.yes-no-block";
   correctAnswer?: boolean | string | null;
   correctFeedback?: string | null;
@@ -92,7 +93,7 @@ type StrapiYesNoBlock = StrapiBaseContentBlock & {
   question?: string | null;
 };
 
-type StrapiMatchingBlock = StrapiBaseContentBlock & {
+type CmsMatchingBlock = CmsBaseContentBlock & {
   __component?: "learning.matching-block";
   correctFeedback?: string | null;
   incorrectFeedback?: string | null;
@@ -102,7 +103,7 @@ type StrapiMatchingBlock = StrapiBaseContentBlock & {
   scenario?: string | null;
 };
 
-type StrapiCodeExerciseBlock = StrapiBaseContentBlock & {
+type CmsCodeExerciseBlock = CmsBaseContentBlock & {
   __component?: "learning.code-exercise-block";
   codeLanguage?: string | null;
   codeSnippet?: string | null;
@@ -114,10 +115,10 @@ type StrapiCodeExerciseBlock = StrapiBaseContentBlock & {
   theoryMarkdown?: string | null;
 };
 
-type StrapiUnknownBlock = StrapiBaseContentBlock & Record<string, unknown>;
+type CmsUnknownBlock = CmsBaseContentBlock & Record<string, unknown>;
 
-type StrapiCoursesResponse = {
-  data: StrapiCourse[];
+type CmsCoursesResponse = {
+  data: CmsCourse[];
 };
 
 export type CourseChapterRecord = {
@@ -249,49 +250,19 @@ export type CourseRecord = {
   sortOrder: number;
 };
 
-const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
-
-function getHeaders() {
-  if (!STRAPI_API_TOKEN) {
-    throw new Error("Missing STRAPI_API_TOKEN.");
-  }
-
-  return {
-    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function strapiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(new URL(path, STRAPI_BASE_URL), {
-    headers: getHeaders(),
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Strapi request failed with ${response.status}: ${errorText || response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
 function resolveMediaUrl(url: string | null | undefined) {
   if (!url) {
     return "/characters/Pip_1.png";
   }
 
-  if (url.startsWith("http://") || url.startsWith("https://")) {
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")) {
     return url;
   }
 
-  return new URL(url, STRAPI_BASE_URL).toString();
+  return `/${url}`;
 }
 
-function normalizeCourse(course: StrapiCourse): CourseRecord | null {
+function normalizeCourse(course: CmsCourse): CourseRecord | null {
   if (!course.name?.trim() || !course.slug?.trim()) {
     return null;
   }
@@ -316,7 +287,7 @@ function normalizeCourse(course: StrapiCourse): CourseRecord | null {
   };
 }
 
-function normalizeChapters(chapters: StrapiCourse["chapters"], courseSlug: string) {
+function normalizeChapters(chapters: CmsCourse["chapters"], courseSlug: string) {
   if (!Array.isArray(chapters)) {
     return [] as CourseChapterRecord[];
   }
@@ -351,7 +322,7 @@ function normalizeChapters(chapters: StrapiCourse["chapters"], courseSlug: strin
     .sort((left, right) => left.sortOrder - right.sortOrder);
 }
 
-function normalizeChapterContentBlocks(contentBlocks: StrapiCourseChapter["contentBlocks"]) {
+function normalizeChapterContentBlocks(contentBlocks: CmsCourseChapter["contentBlocks"]) {
   if (!Array.isArray(contentBlocks)) {
     return [] as ChapterContentBlockRecord[];
   }
@@ -359,13 +330,13 @@ function normalizeChapterContentBlocks(contentBlocks: StrapiCourseChapter["conte
   return contentBlocks.map(normalizeChapterContentBlock);
 }
 
-function normalizeChapterContentBlock(block: StrapiChapterContentBlock, index: number) {
+function normalizeChapterContentBlock(block: CmsChapterContentBlock, index: number) {
   const blockType = block.__component?.trim() || "learning.unknown-block";
   const blockId = String(block.id ?? `${blockType}-${index}`);
   const title = block.title?.trim() || inferFallbackTitle(blockType, index);
 
   if (blockType === "learning.theory-block") {
-    const theoryBlock = block as StrapiTheoryBlock;
+    const theoryBlock = block as CmsTheoryBlock;
     return {
       bodyMarkdown: theoryBlock.bodyMarkdown?.trim() || "",
       id: blockId,
@@ -376,99 +347,99 @@ function normalizeChapterContentBlock(block: StrapiChapterContentBlock, index: n
   }
 
   if (blockType === "learning.multiple-choice-block") {
-    const choices = normalizeChoices((block as StrapiMultipleChoiceBlock).choices ?? (block as StrapiMultipleChoiceBlock).options);
+    const choices = normalizeChoices((block as CmsMultipleChoiceBlock).choices ?? (block as CmsMultipleChoiceBlock).options);
     return {
       choices,
-      correctFeedback: (block as StrapiMultipleChoiceBlock).correctFeedback?.trim() || "Correct answer.",
+      correctFeedback: (block as CmsMultipleChoiceBlock).correctFeedback?.trim() || "Correct answer.",
       id: blockId,
       incorrectFeedback:
-        (block as StrapiMultipleChoiceBlock).incorrectFeedback?.trim() || "Try again.",
+        (block as CmsMultipleChoiceBlock).incorrectFeedback?.trim() || "Try again.",
       malformed:
-        !((block as StrapiMultipleChoiceBlock).question?.trim()) ||
+        !((block as CmsMultipleChoiceBlock).question?.trim()) ||
         choices.length === 0 ||
         !choices.some((choice) => choice.isCorrect),
-      question: (block as StrapiMultipleChoiceBlock).question?.trim() || "",
+      question: (block as CmsMultipleChoiceBlock).question?.trim() || "",
       title,
       type: "multiple-choice",
     } satisfies MultipleChoiceBlockRecord;
   }
 
   if (blockType === "learning.fill-in-the-blank-block") {
-    const options = normalizeChoices((block as StrapiFillInTheBlankBlock).options);
+    const options = normalizeChoices((block as CmsFillInTheBlankBlock).options);
     const acceptedAnswers = normalizeStringAnswers(
-      (block as StrapiFillInTheBlankBlock).acceptedAnswers ??
-        extractCorrectOptionAnswers((block as StrapiFillInTheBlankBlock).options) ??
-        (block as StrapiFillInTheBlankBlock).answers ??
-        (block as StrapiFillInTheBlankBlock).answer,
+      (block as CmsFillInTheBlankBlock).acceptedAnswers ??
+        extractCorrectOptionAnswers((block as CmsFillInTheBlankBlock).options) ??
+        (block as CmsFillInTheBlankBlock).answers ??
+        (block as CmsFillInTheBlankBlock).answer,
     );
     return {
       acceptedAnswers,
       correctFeedback:
-        (block as StrapiFillInTheBlankBlock).correctFeedback?.trim() || "Correct answer.",
+        (block as CmsFillInTheBlankBlock).correctFeedback?.trim() || "Correct answer.",
       id: blockId,
       incorrectFeedback:
-        (block as StrapiFillInTheBlankBlock).incorrectFeedback?.trim() || "Try again.",
+        (block as CmsFillInTheBlankBlock).incorrectFeedback?.trim() || "Try again.",
       malformed:
-        !((block as StrapiFillInTheBlankBlock).prompt?.trim()) ||
+        !((block as CmsFillInTheBlankBlock).prompt?.trim()) ||
         options.length === 0 ||
         !options.some((option) => option.isCorrect),
       options,
-      prompt: (block as StrapiFillInTheBlankBlock).prompt?.trim() || "",
+      prompt: (block as CmsFillInTheBlankBlock).prompt?.trim() || "",
       title,
       type: "fill-in-the-blank",
     } satisfies FillInTheBlankBlockRecord;
   }
 
   if (blockType === "learning.true-false-block") {
-    const correctAnswer = normalizeBooleanAnswer((block as StrapiTrueFalseBlock).correctAnswer);
+    const correctAnswer = normalizeBooleanAnswer((block as CmsTrueFalseBlock).correctAnswer);
     return {
       correctAnswer,
       correctFeedback:
-        (block as StrapiTrueFalseBlock).correctFeedback?.trim() || "Correct answer.",
+        (block as CmsTrueFalseBlock).correctFeedback?.trim() || "Correct answer.",
       id: blockId,
       incorrectFeedback:
-        (block as StrapiTrueFalseBlock).incorrectFeedback?.trim() || "Try again.",
-      malformed: !((block as StrapiTrueFalseBlock).statement?.trim()),
-      statement: (block as StrapiTrueFalseBlock).statement?.trim() || "",
+        (block as CmsTrueFalseBlock).incorrectFeedback?.trim() || "Try again.",
+      malformed: !((block as CmsTrueFalseBlock).statement?.trim()),
+      statement: (block as CmsTrueFalseBlock).statement?.trim() || "",
       title,
       type: "true-false",
     } satisfies TrueFalseBlockRecord;
   }
 
   if (blockType === "learning.yes-no-block") {
-    const correctAnswer = normalizeBooleanAnswer((block as StrapiYesNoBlock).correctAnswer);
+    const correctAnswer = normalizeBooleanAnswer((block as CmsYesNoBlock).correctAnswer);
     return {
       correctAnswer,
       correctFeedback:
-        (block as StrapiYesNoBlock).correctFeedback?.trim() || "Correct answer.",
+        (block as CmsYesNoBlock).correctFeedback?.trim() || "Correct answer.",
       id: blockId,
       incorrectFeedback:
-        (block as StrapiYesNoBlock).incorrectFeedback?.trim() || "Try again.",
-      malformed: !((block as StrapiYesNoBlock).question?.trim()),
-      question: (block as StrapiYesNoBlock).question?.trim() || "",
+        (block as CmsYesNoBlock).incorrectFeedback?.trim() || "Try again.",
+      malformed: !((block as CmsYesNoBlock).question?.trim()),
+      question: (block as CmsYesNoBlock).question?.trim() || "",
       title,
       type: "yes-no",
     } satisfies YesNoBlockRecord;
   }
 
   if (blockType === "learning.matching-block") {
-    const options = normalizeChoices((block as StrapiMatchingBlock).options);
-    const pairs = normalizeMatchingPairs((block as StrapiMatchingBlock).pairs);
+    const options = normalizeChoices((block as CmsMatchingBlock).options);
+    const pairs = normalizeMatchingPairs((block as CmsMatchingBlock).pairs);
     const mode = pairs.length > 0 ? "pairs" : options.length > 0 ? "options" : "pairs";
     return {
       correctFeedback:
-        (block as StrapiMatchingBlock).correctFeedback?.trim() || "Correct answer.",
+        (block as CmsMatchingBlock).correctFeedback?.trim() || "Correct answer.",
       id: blockId,
       incorrectFeedback:
-        (block as StrapiMatchingBlock).incorrectFeedback?.trim() || "Try again.",
+        (block as CmsMatchingBlock).incorrectFeedback?.trim() || "Try again.",
       malformed:
-        !((block as StrapiMatchingBlock).question?.trim()) ||
+        !((block as CmsMatchingBlock).question?.trim()) ||
         (pairs.length === 0 && !options.some((option) => option.isCorrect)),
       mode,
       options,
       pairs,
-      question: (block as StrapiMatchingBlock).question?.trim() || "",
-      scenario: (block as StrapiMatchingBlock).scenario?.trim() || "",
+      question: (block as CmsMatchingBlock).question?.trim() || "",
+      scenario: (block as CmsMatchingBlock).scenario?.trim() || "",
       title,
       type: "matching",
     } satisfies MatchingBlockRecord;
@@ -476,20 +447,20 @@ function normalizeChapterContentBlock(block: StrapiChapterContentBlock, index: n
 
   if (blockType === "learning.code-exercise-block") {
     return {
-      codeLanguage: (block as StrapiCodeExerciseBlock).codeLanguage?.trim() || "text",
-      codeSnippet: (block as StrapiCodeExerciseBlock).codeSnippet?.trim() || "",
-      expectedAnswer: (block as StrapiCodeExerciseBlock).expectedAnswer?.trim() || "",
+      codeLanguage: (block as CmsCodeExerciseBlock).codeLanguage?.trim() || "text",
+      codeSnippet: (block as CmsCodeExerciseBlock).codeSnippet?.trim() || "",
+      expectedAnswer: (block as CmsCodeExerciseBlock).expectedAnswer?.trim() || "",
       failureFeedback:
-        (block as StrapiCodeExerciseBlock).failureFeedback?.trim() || "Try again.",
+        (block as CmsCodeExerciseBlock).failureFeedback?.trim() || "Try again.",
       id: blockId,
       malformed:
-        !((block as StrapiCodeExerciseBlock).taskPrompt?.trim()) ||
-        !((block as StrapiCodeExerciseBlock).expectedAnswer?.trim()),
-      placeholderAnswer: (block as StrapiCodeExerciseBlock).placeholderAnswer?.trim() || "",
+        !((block as CmsCodeExerciseBlock).taskPrompt?.trim()) ||
+        !((block as CmsCodeExerciseBlock).expectedAnswer?.trim()),
+      placeholderAnswer: (block as CmsCodeExerciseBlock).placeholderAnswer?.trim() || "",
       successFeedback:
-        (block as StrapiCodeExerciseBlock).successFeedback?.trim() || "Correct answer.",
-      taskPrompt: (block as StrapiCodeExerciseBlock).taskPrompt?.trim() || "",
-      theoryMarkdown: (block as StrapiCodeExerciseBlock).theoryMarkdown?.trim() || "",
+        (block as CmsCodeExerciseBlock).successFeedback?.trim() || "Correct answer.",
+      taskPrompt: (block as CmsCodeExerciseBlock).taskPrompt?.trim() || "",
+      theoryMarkdown: (block as CmsCodeExerciseBlock).theoryMarkdown?.trim() || "",
       title,
       type: "code-exercise",
     } satisfies CodeExerciseBlockRecord;
@@ -664,47 +635,138 @@ function readString(value: unknown) {
   return value.trim();
 }
 
-function buildBaseCourseParams() {
-  const params = new URLSearchParams();
-  params.set("status", "published");
-  params.set("sort", "sortOrder:asc");
-  params.set("filters[isPublishedInApp][$eq]", "true");
-  params.set("populate[banner][fields][0]", "url");
-  params.set("populate[banner][fields][1]", "alternativeText");
-  params.set("populate[banner][fields][2]", "width");
-  params.set("populate[banner][fields][3]", "height");
-  return params;
+
+type SanityBanner = {
+  alternativeText?: string | null;
+  height?: number | null;
+  url?: string | null;
+  width?: number | null;
+};
+
+type SanityContentBlock = {
+  _key?: string;
+  _type?: string;
+  blockType?: string | null;
+} & Record<string, unknown>;
+
+type SanityChapter = {
+  _key?: string;
+  chapterNumber?: number | null;
+  contentBlocks?: SanityContentBlock[] | null;
+  description?: string | null;
+  emoji?: string | null;
+  name?: string | null;
+  slug?: string | null;
+  sortOrder?: number | null;
+};
+
+type SanityCourse = {
+  _id: string;
+  accessType?: string | null;
+  banner?: SanityBanner | null;
+  chapters?: SanityChapter[] | null;
+  difficultyLevel?: string | null;
+  estimatedMinutes?: number | null;
+  isFeatured?: boolean | null;
+  name?: string | null;
+  shortDescription?: string | null;
+  slug?: string | null;
+  sortOrder?: number | null;
+};
+
+const publishedCourseFilter = `_type == "course" && isPublishedInApp == true && !(_id in path("drafts.**"))`;
+
+const courseProjection = `{
+  _id,
+  accessType,
+  banner,
+  chapters[]{
+    _key,
+    chapterNumber,
+    contentBlocks,
+    description,
+    emoji,
+    name,
+    slug,
+    sortOrder
+  },
+  difficultyLevel,
+  estimatedMinutes,
+  isFeatured,
+  name,
+  shortDescription,
+  slug,
+  sortOrder
+}`;
+
+function toContentBlock(block: SanityContentBlock, index: number): CmsChapterContentBlock {
+  const blockType = block.blockType?.trim() || block._type?.trim() || "learning.unknown-block";
+
+  return {
+    ...block,
+    __component: blockType,
+    id: block._key ?? `${blockType}-${index}`,
+  };
+}
+
+function toCourseSource(course: SanityCourse): CmsCourse {
+  return {
+    accessType: course.accessType,
+    banner: course.banner
+      ? {
+          alternativeText: course.banner.alternativeText,
+          height: course.banner.height,
+          url: course.banner.url,
+          width: course.banner.width,
+        }
+      : null,
+    chapters: (course.chapters ?? []).map((chapter, index) => ({
+      chapterNumber: chapter.chapterNumber,
+      contentBlocks: (chapter.contentBlocks ?? []).map(toContentBlock),
+      description: chapter.description,
+      documentId: chapter._key ?? `${course._id}-chapter-${index}`,
+      emoji: chapter.emoji,
+      id: index,
+      name: chapter.name,
+      slug: chapter.slug,
+      sortOrder: chapter.sortOrder,
+    })),
+    difficultyLevel: course.difficultyLevel,
+    documentId: course._id,
+    estimatedMinutes: course.estimatedMinutes,
+    id: 0,
+    isFeatured: course.isFeatured,
+    isPublishedInApp: true,
+    name: course.name,
+    shortDescription: course.shortDescription,
+    slug: course.slug,
+    sortOrder: course.sortOrder,
+  };
+}
+
+function normalizeSanityCourse(course: SanityCourse) {
+  return normalizeCourse(toCourseSource(course));
 }
 
 export async function fetchPublishedCourses() {
-  const params = buildBaseCourseParams();
-  const response = await strapiFetch<StrapiCoursesResponse>(`/api/courses?${params.toString()}`);
+  const courses = await getSanityClient().fetch<SanityCourse[]>(
+    `*[${publishedCourseFilter}] | order(sortOrder asc) ${courseProjection}`,
+  );
 
-  return response.data
-    .map(normalizeCourse)
+  return courses
+    .map(normalizeSanityCourse)
     .filter((course): course is CourseRecord => course !== null)
     .sort((left, right) => left.sortOrder - right.sortOrder);
 }
 
 export async function fetchPublishedCourseBySlug(slug: string) {
-  const params = buildBaseCourseParams();
-  params.set("filters[slug][$eq]", slug);
-  params.set("populate[chapters][fields][0]", "name");
-  params.set("populate[chapters][fields][1]", "description");
-  params.set("populate[chapters][fields][2]", "slug");
-  params.set("populate[chapters][fields][3]", "chapterNumber");
-  params.set("populate[chapters][fields][4]", "sortOrder");
-  params.set("populate[chapters][fields][5]", "emoji");
-  params.set("populate[chapters][sort][0]", "sortOrder:asc");
+  const course = await getSanityClient().fetch<SanityCourse | null>(
+    `*[${publishedCourseFilter} && slug == $slug][0] ${courseProjection}`,
+    { slug },
+  );
 
-  const response = await strapiFetch<StrapiCoursesResponse>(`/api/courses?${params.toString()}`);
-  const course = response.data.map(normalizeCourse).find((value) => value !== null) ?? null;
-  return course;
+  return course ? normalizeSanityCourse(course) : null;
 }
-
-type StrapiChaptersResponse = {
-  data: StrapiCourseChapter[];
-};
 
 export async function fetchPublishedCourseChapter(courseSlug: string, chapterSlug: string) {
   const course = await fetchPublishedCourseBySlug(courseSlug);
@@ -713,27 +775,10 @@ export async function fetchPublishedCourseChapter(courseSlug: string, chapterSlu
     return null;
   }
 
-  const params = new URLSearchParams();
-  params.set("status", "published");
-  params.set("filters[slug][$eq]", chapterSlug);
-  params.set("populate[contentBlocks][populate]", "*");
-
-  const response = await strapiFetch<StrapiChaptersResponse>(`/api/chapters?${params.toString()}`);
-  const rawChapter = response.data.find((chapter) => chapter.slug?.trim() === chapterSlug) ?? null;
-
-  if (!rawChapter) {
-    return null;
-  }
-
-  const chapter = normalizeChapters([rawChapter], course.slug)[0] ?? null;
+  const chapterIndex = course.chapters.findIndex((chapter) => chapter.slug === chapterSlug);
+  const chapter = course.chapters[chapterIndex];
 
   if (!chapter) {
-    return null;
-  }
-
-  const chapterIndex = course.chapters.findIndex((item) => item.slug === chapter.slug);
-
-  if (chapterIndex < 0) {
     return null;
   }
 

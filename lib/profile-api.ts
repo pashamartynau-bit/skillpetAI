@@ -28,7 +28,7 @@ export async function fetchUserProfile(insforgeUserId: string) {
   }
 
   if (!response.ok || !payload.profile) {
-    throw new Error(payload.error ?? "Failed to load user profile from Strapi.");
+    throw new Error(payload.error ?? "Failed to load user profile from Sanity.");
   }
 
   return payload.profile;

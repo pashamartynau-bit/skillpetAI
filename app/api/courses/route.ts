@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { fetchPublishedCourses } from "@/lib/strapi-courses";
+import { fetchPublishedCourses } from "@/lib/cms-courses";
 
 export async function GET() {
   try {
@@ -12,7 +12,7 @@ export async function GET() {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to load courses from Strapi.",
+            : "Unable to load courses from Sanity.",
       },
       { status: 500 },
     );

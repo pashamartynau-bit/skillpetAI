@@ -204,7 +204,7 @@ export function ProfilePageScreen({ characters }: ProfilePageScreenProps) {
               Profile details
             </CardTitle>
             <CardDescription className="text-[#697391] dark:text-[#a8b7a6]">
-              Synced from your authenticated account and Strapi profile record.
+              Synced from your authenticated account and Sanity profile record.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">

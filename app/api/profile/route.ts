@@ -5,28 +5,8 @@ import type {
   AppUserSettings,
   SelectedCharacter,
 } from "@/lib/app-user-profile";
-
-type StrapiDocument = {
-  documentId: string;
-  insforgeUserId?: string;
-  email?: string | null;
-  displayName?: string | null;
-  avatarUrl?: string | null;
-  emailVerified?: boolean | null;
-  lastAuthenticatedAt?: string | null;
-  characterFileName?: string | null;
-  characterName?: string | null;
-  emailRemindersEnabled?: boolean | null;
-  showOnLeaderboard?: boolean | null;
-};
-
-type StrapiListResponse = {
-  data: StrapiDocument[];
-};
-
-type StrapiSingleResponse = {
-  data: StrapiDocument;
-};
+import { findAppUserByInsforgeId, upsertAppUser, type AppUserRecord } from "@/lib/cms-users";
+import { hasSanityConfig } from "@/lib/sanity";
 
 type ProfileUpdatePayload = {
   insforgeUserId: string;
@@ -34,10 +14,6 @@ type ProfileUpdatePayload = {
   characterName?: string;
   settings?: Partial<AppUserSettings>;
 };
-
-const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
-const STRAPI_USERS_COLLECTION = process.env.STRAPI_USERS_COLLECTION ?? "app-users";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -87,51 +63,6 @@ function isProfileUpdatePayload(value: unknown): value is ProfileUpdatePayload {
   return hasCharacterUpdate || hasSettingsUpdate;
 }
 
-function getHeaders() {
-  if (!STRAPI_API_TOKEN) {
-    throw new Error("Missing STRAPI_API_TOKEN.");
-  }
-
-  return {
-    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function strapiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(new URL(path, STRAPI_BASE_URL), {
-    ...init,
-    headers: {
-      ...getHeaders(),
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Strapi request failed with ${response.status}: ${errorText || response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
-async function findUserByInsforgeId(insforgeUserId: string) {
-  const params = new URLSearchParams({
-    "filters[insforgeUserId][$eq]": insforgeUserId,
-    "pagination[pageSize]": "1",
-  });
-
-  const response = await strapiFetch<StrapiListResponse>(
-    `/api/${STRAPI_USERS_COLLECTION}?${params.toString()}`,
-    { method: "GET" },
-  );
-
-  return response.data[0] ?? null;
-}
-
 function buildProfileUpdateData(body: ProfileUpdatePayload) {
   const data: Record<string, boolean | string> = {};
 
@@ -153,7 +84,7 @@ function buildProfileUpdateData(body: ProfileUpdatePayload) {
   return data;
 }
 
-function toSelectedCharacter(document: StrapiDocument): SelectedCharacter | null {
+function toSelectedCharacter(document: AppUserRecord): SelectedCharacter | null {
   if (!document.characterFileName || !document.characterName) {
     return null;
   }
@@ -164,16 +95,16 @@ function toSelectedCharacter(document: StrapiDocument): SelectedCharacter | null
   };
 }
 
-function toAppUserSettings(document: StrapiDocument): AppUserSettings {
+function toAppUserSettings(document: AppUserRecord): AppUserSettings {
   return {
     emailRemindersEnabled: document.emailRemindersEnabled ?? true,
     showOnLeaderboard: document.showOnLeaderboard ?? true,
   };
 }
 
-function toAppUserProfile(document: StrapiDocument): AppUserProfile {
+function toAppUserProfile(document: AppUserRecord): AppUserProfile {
   return {
-    documentId: document.documentId,
+    documentId: document._id,
     insforgeUserId: document.insforgeUserId ?? "",
     email: document.email ?? null,
     displayName: document.displayName ?? null,
@@ -198,24 +129,25 @@ export async function GET(request: Request) {
     }
 
     try {
-      if (!STRAPI_API_TOKEN) {
-        throw new Error("Missing STRAPI_API_TOKEN.");
+      if (!hasSanityConfig()) {
+        throw new Error("Missing SANITY_API_TOKEN.");
       }
-      const user = await findUserByInsforgeId(insforgeUserId);
+
+      const user = await findAppUserByInsforgeId(insforgeUserId);
 
       if (!user) {
         return NextResponse.json({ error: "User profile not found." }, { status: 404 });
       }
 
       return NextResponse.json({ profile: toAppUserProfile(user) });
-    } catch (strapiError) {
-      console.error("Failed to fetch profile from Strapi:", strapiError);
+    } catch (cmsError) {
+      console.error("Failed to fetch profile from Sanity:", cmsError);
       return NextResponse.json(
         {
           error:
-            strapiError instanceof Error
-              ? strapiError.message
-              : "Unable to load user profile from Strapi.",
+            cmsError instanceof Error
+              ? cmsError.message
+              : "Unable to load user profile from Sanity.",
         },
         { status: 500 },
       );
@@ -245,35 +177,27 @@ export async function PATCH(request: Request) {
     }
 
     try {
-      if (!STRAPI_API_TOKEN) {
-        throw new Error("Missing STRAPI_API_TOKEN.");
+      if (!hasSanityConfig()) {
+        throw new Error("Missing SANITY_API_TOKEN.");
       }
 
-      const existingUser = await findUserByInsforgeId(body.insforgeUserId);
+      const existingUser = await findAppUserByInsforgeId(body.insforgeUserId);
 
       if (!existingUser) {
         return NextResponse.json({ error: "User profile not found." }, { status: 404 });
       }
 
-      const updated = await strapiFetch<StrapiSingleResponse>(
-        `/api/${STRAPI_USERS_COLLECTION}/${existingUser.documentId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            data: buildProfileUpdateData(body),
-          }),
-        },
-      );
+      const updated = await upsertAppUser(body.insforgeUserId, buildProfileUpdateData(body));
 
-      return NextResponse.json({ profile: toAppUserProfile(updated.data) });
-    } catch (strapiError) {
-      console.error("Failed to save character selection to Strapi:", strapiError);
+      return NextResponse.json({ profile: toAppUserProfile(updated) });
+    } catch (cmsError) {
+      console.error("Failed to save character selection to Sanity:", cmsError);
       return NextResponse.json(
         {
           error:
-            strapiError instanceof Error
-              ? strapiError.message
-              : "Unable to save character selection to Strapi.",
+            cmsError instanceof Error
+              ? cmsError.message
+              : "Unable to save character selection to Sanity.",
         },
         { status: 500 },
       );

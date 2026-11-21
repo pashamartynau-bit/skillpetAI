@@ -4,7 +4,7 @@ This guide provides step-by-step instructions for configuring and running the **
 
 Omni AI integrates three primary services:
 1. **InsForge**: Handles backend database, custom serverless functions, and user authentication.
-2. **Strapi CMS**: Manages courses, chapters, content blocks, and handles user progress synchronization.
+2. **Sanity**: Manages courses, chapters, content blocks, learner profiles, and progress.
 3. **Stripe**: Manages subscription billing (monthly/yearly plans) and payments.
 
 ---
@@ -47,29 +47,19 @@ InsForge acts as the core backend for authenticating users and making database/A
 
 ---
 
-### B. Strapi Setup
+### B. Sanity Setup
 
-Strapi is the Headless CMS managing courses, chapters, and companion progression.
+Sanity is the CMS for courses, chapters, learner profiles, and progress. The app is wired to the **Learn AI** project.
 
-1. **`STRAPI_BASE_URL`**:
-   - The URL where your Strapi instance is running.
-   - Local default: `http://localhost:1337`
-   - Production example: `https://your-strapi-instance.onrender.com`
-2. **`STRAPI_API_TOKEN`**:
-   - Next.js requires an API token to read/write to the Strapi collections.
-   - **How to generate**:
-     1. Log in to your Strapi Admin Panel.
-     2. Go to **Settings** -> **API Tokens**.
-     3. Click **Create new API Token**.
-     4. Set **Token type** to *Custom*.
-     5. Under permissions, grant `find`, `findOne`, `create`, and `update` access to the following collection types:
-        - **App User** (`app-users`)
-        - **User Course Progress** (`user-course-progresses`)
-     6. Copy the generated token and save it as `STRAPI_API_TOKEN`.
-3. **Collection Names**:
-   - `STRAPI_USERS_COLLECTION`: Default is `app-users`.
-   - `STRAPI_USER_COURSE_PROGRESS_COLLECTION`: Default is `user-course-progresses`.
-   - Refer to [the Strapi collections guide](strapi-collections.md) for full collection schema details.
+1. **`SANITY_PROJECT_ID`**: `njws1rbr`
+2. **`SANITY_DATASET`**: `production`
+3. **`SANITY_API_TOKEN`**:
+   - A Sanity API token with Editor or Developer access to the Learn AI project.
+   - Create it in [sanity.io/manage](https://www.sanity.io/manage) under the project API settings.
+   - Keep this value on the server. Do not commit it or expose it with a `NEXT_PUBLIC_` name.
+   - When the token is absent, sign-in stays in demo mode and course reads fail until it is set.
+
+The document shapes are listed in [the Sanity content model](cms.md).
 
 ---
 

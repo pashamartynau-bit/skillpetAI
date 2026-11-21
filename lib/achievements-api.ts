@@ -33,7 +33,7 @@ export async function fetchAchievements(insforgeUserId: string) {
   const payload = (await response.json()) as AchievementsResponse;
 
   if (!response.ok || !payload.summary || !payload.leaderboard) {
-    throw new Error(payload.error ?? "Failed to load achievements from Strapi.");
+    throw new Error(payload.error ?? "Failed to load achievements from Sanity.");
   }
 
   return {

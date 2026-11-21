@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { requireAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
 import { getStripe } from "@/lib/stripe";
-import { findAppUserBillingByInsforgeId } from "@/lib/strapi-billing";
+import { findAppUserBillingByInsforgeId } from "@/lib/cms-billing";
 
 export async function POST(request: Request) {
   try {

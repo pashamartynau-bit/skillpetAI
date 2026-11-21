@@ -5,7 +5,7 @@ import { getStripe } from "@/lib/stripe";
 import {
   findAppUserBillingByStripeCustomerId,
   syncStripeSubscriptionForUser,
-} from "@/lib/strapi-billing";
+} from "@/lib/cms-billing";
 
 async function syncFromSubscription(
   subscription: Stripe.Subscription,

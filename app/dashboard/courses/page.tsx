@@ -63,7 +63,7 @@ export default function ExploreCoursesPage() {
         startTransition(() => {
           setCourses([]);
           setCoursesError(
-            error instanceof Error ? error.message : "Failed to load courses from Strapi.",
+            error instanceof Error ? error.message : "Failed to load courses from Sanity.",
           );
           setLoadingCourses(false);
         });
@@ -120,7 +120,7 @@ export default function ExploreCoursesPage() {
               </h1>
               <p className="mt-3 max-w-2xl text-base leading-7 text-[#697391] dark:text-[#a8b7a6]">
                 Choose a path and keep building your AI skills with live course data
-                from Strapi.
+                from Sanity.
               </p>
 
               <div className="mt-6 flex flex-col gap-3 lg:flex-row">

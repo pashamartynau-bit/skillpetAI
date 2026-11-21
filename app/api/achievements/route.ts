@@ -1,35 +1,12 @@
 import { NextResponse } from "next/server";
 import { differenceInCalendarDays, parseISO } from "date-fns";
 
-type StrapiAppUserDocument = {
-  documentId: string;
-  displayName?: string | null;
-  email?: string | null;
-  gems?: number | null;
-  hearts?: number | null;
-  insforgeUserId?: string;
-  showOnLeaderboard?: boolean | null;
-};
-
-type StrapiUserCourseProgressDocument = {
-  activityTimestamps?: unknown;
-  documentId: string;
-  insforgeUserId?: string;
-};
-
-type StrapiPaginationMeta = {
-  page?: number;
-  pageCount?: number;
-  pageSize?: number;
-  total?: number;
-};
-
-type StrapiListResponse<TDocument> = {
-  data: TDocument[];
-  meta?: {
-    pagination?: StrapiPaginationMeta;
-  };
-};
+import {
+  listAppUsers,
+  listCourseProgressByInsforgeId,
+  type AppUserRecord,
+  type CourseProgressRecord,
+} from "@/lib/cms-users";
 
 type AchievementSummary = {
   hearts: number;
@@ -48,90 +25,7 @@ type AchievementLeaderboardEntry = {
   rank: number;
 };
 
-const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
-const STRAPI_USERS_COLLECTION = process.env.STRAPI_USERS_COLLECTION ?? "app-users";
-const STRAPI_USER_COURSE_PROGRESS_COLLECTION =
-  process.env.STRAPI_USER_COURSE_PROGRESS_COLLECTION ?? "user-course-progresses";
-
-function getHeaders() {
-  if (!STRAPI_API_TOKEN) {
-    throw new Error("Missing STRAPI_API_TOKEN.");
-  }
-
-  return {
-    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function strapiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(new URL(path, STRAPI_BASE_URL), {
-    ...init,
-    headers: {
-      ...getHeaders(),
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Strapi request failed with ${response.status}: ${errorText || response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
-async function listAllAppUsers() {
-  const pageSize = 100;
-  const users: StrapiAppUserDocument[] = [];
-  let page = 1;
-  let pageCount = 1;
-
-  while (page <= pageCount) {
-    const params = new URLSearchParams({
-      "pagination[page]": String(page),
-      "pagination[pageSize]": String(pageSize),
-    });
-
-    const response = await strapiFetch<StrapiListResponse<StrapiAppUserDocument>>(
-      `/api/${STRAPI_USERS_COLLECTION}?${params.toString()}`,
-      { method: "GET" },
-    );
-
-    users.push(...response.data);
-
-    const nextPageCount = response.meta?.pagination?.pageCount;
-    pageCount =
-      typeof nextPageCount === "number"
-        ? nextPageCount
-        : response.data.length < pageSize
-          ? page
-          : page + 1;
-    page += 1;
-  }
-
-  return users;
-}
-
-async function listUserCourseProgressByInsforgeId(insforgeUserId: string) {
-  const params = new URLSearchParams({
-    "filters[insforgeUserId][$eq]": insforgeUserId,
-    "pagination[pageSize]": "200",
-  });
-
-  const response = await strapiFetch<StrapiListResponse<StrapiUserCourseProgressDocument>>(
-    `/api/${STRAPI_USER_COURSE_PROGRESS_COLLECTION}?${params.toString()}`,
-    { method: "GET" },
-  );
-
-  return response.data;
-}
-
-function getDisplayName(user: StrapiAppUserDocument) {
+function getDisplayName(user: AppUserRecord) {
   const trimmedDisplayName = user.displayName?.trim();
 
   if (trimmedDisplayName) {
@@ -151,7 +45,7 @@ function getNonNegativeInteger(value: unknown, fallback = 0) {
   return typeof value === "number" ? Math.max(0, Math.floor(value)) : fallback;
 }
 
-function getActivityDateKeys(documents: StrapiUserCourseProgressDocument[]) {
+function getActivityDateKeys(documents: CourseProgressRecord[]) {
   const activityDateKeys = new Set<string>();
 
   for (const document of documents) {
@@ -203,7 +97,7 @@ function getMaxStreak(activityDateKeys: string[]) {
 }
 
 function buildLeaderboard(
-  users: StrapiAppUserDocument[],
+  users: AppUserRecord[],
   currentInsforgeUserId: string,
 ): AchievementLeaderboardEntry[] {
   const visibleUsers = users.filter(
@@ -236,7 +130,7 @@ function buildLeaderboard(
       displayName: getDisplayName(user),
       gems,
       hearts,
-      insforgeUserId: user.insforgeUserId ?? user.documentId,
+      insforgeUserId: user.insforgeUserId ?? user._id,
       isCurrentUser: user.insforgeUserId === currentInsforgeUserId,
       rank,
     };
@@ -276,8 +170,8 @@ export async function GET(request: Request) {
     }
 
     const [users, courseProgressDocuments] = await Promise.all([
-      listAllAppUsers(),
-      listUserCourseProgressByInsforgeId(insforgeUserId),
+      listAppUsers(),
+      listCourseProgressByInsforgeId(insforgeUserId),
     ]);
 
     const leaderboard = buildLeaderboard(users, insforgeUserId);
@@ -304,7 +198,7 @@ export async function GET(request: Request) {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to load achievements from Strapi.",
+            : "Unable to load achievements from Sanity.",
       },
       { status: 500 },
     );

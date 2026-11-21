@@ -42,7 +42,7 @@ import type {
   CourseChapterRecord,
   CourseRecord,
   MatchingPairRecord,
-} from "@/lib/strapi-courses";
+} from "@/lib/cms-courses";
 import { cn } from "@/lib/utils";
 
 type ChapterLearningScreenProps = {
@@ -1076,7 +1076,7 @@ function MalformedBlockNotice({ block }: { block: ChapterContentBlockRecord }) {
         </div>
         <div>
           <p className="text-lg font-semibold tracking-[-0.03em] text-[#203057]">
-            This content needs to be completed in Strapi
+            This content needs to be completed in Sanity
           </p>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-[#5f7194]">
             Omni AI can render the <strong>{block.type}</strong> block type, but the

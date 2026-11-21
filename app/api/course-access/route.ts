@@ -5,7 +5,7 @@ import {
   findAppUserBillingByInsforgeId,
   getChapterAccessSnapshot,
   getCourseAccessSnapshot,
-} from "@/lib/strapi-billing";
+} from "@/lib/cms-billing";
 
 export async function GET(request: Request) {
   try {

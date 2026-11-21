@@ -164,7 +164,7 @@ function GradientGridIllustration({ mode }: { mode: AuthMode }) {
           </div>
         </div>
 
-        {/* Step 3: Strapi User Sync */}
+        {/* Step 3: Sanity User Sync */}
         <div className="relative rounded-2xl border border-border/60 bg-white/40 dark:bg-neutral-900/40 p-4 group transition-all duration-300">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-500/10 text-purple-500">
             <Database className="h-4.5 w-4.5" />
@@ -174,7 +174,7 @@ function GradientGridIllustration({ mode }: { mode: AuthMode }) {
               <span className="font-mono text-[10px] font-bold text-purple-500">03</span>
               <span className="text-[10px] uppercase font-bold tracking-wider text-muted/80">Sync</span>
             </div>
-            <h4 className="mt-1 font-semibold text-foreground text-xs leading-none">Strapi Sync</h4>
+            <h4 className="mt-1 font-semibold text-foreground text-xs leading-none">Sanity Sync</h4>
             <p className="mt-2 text-[10px] leading-relaxed text-muted">
               REST database hook.
             </p>
@@ -205,7 +205,7 @@ function GradientGridIllustration({ mode }: { mode: AuthMode }) {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
           </span>
-          <span className="text-muted font-mono font-medium">Strapi Hook Connection:</span>
+          <span className="text-muted font-mono font-medium">Sanity Hook Connection:</span>
           <span className="text-foreground font-semibold">Active Ready</span>
         </div>
         <span className="text-[10px] text-accent font-mono bg-accent/10 px-2 py-0.5 rounded">REST API</span>
@@ -269,7 +269,7 @@ export function AuthScreen() {
     }
   });
 
-  async function syncUserToStrapi(user: UserSchema) {
+  async function syncUserToSanity(user: UserSchema) {
     if (syncedUserIdRef.current === user.id) {
       return;
     }
@@ -288,13 +288,13 @@ export function AuthScreen() {
     };
 
     if (!response.ok) {
-      throw new Error(payload.error ?? "Failed to save user data to Strapi.");
+      throw new Error(payload.error ?? "Failed to save user data to Sanity.");
     }
 
     syncedUserIdRef.current = user.id;
     setStatus({
       tone: "success",
-      text: `Authenticated and ${payload.operation ?? "synced"} in Strapi.`,
+      text: `Authenticated and ${payload.operation ?? "synced"} in Sanity.`,
     });
   }
 
@@ -327,7 +327,7 @@ export function AuthScreen() {
       }
 
       if (!response.ok || !payload.profile) {
-        throw new Error(payload.error ?? "Failed to load user profile from Strapi.");
+        throw new Error(payload.error ?? "Failed to load user profile from Sanity.");
       }
 
       setProfile(payload.profile);
@@ -338,7 +338,7 @@ export function AuthScreen() {
   }
 
   async function syncAndHydrateUser(user: UserSchema) {
-    await syncUserToStrapi(user);
+    await syncUserToSanity(user);
     await loadUserProfile(user.id);
 
     setStatus({
@@ -505,7 +505,7 @@ export function AuthScreen() {
               </h1>
               <p className="max-w-xl text-base leading-relaxed text-muted sm:text-lg">
                 Email/password and Google authentication run through InsForge,
-                while authenticated users are synced into Strapi over the CMS
+                while authenticated users are synced into Sanity over the CMS
                 REST API.
               </p>
             </div>
