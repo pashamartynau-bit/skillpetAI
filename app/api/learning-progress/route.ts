@@ -22,7 +22,7 @@ import {
   type LearningProgressSnapshot,
   type LearningWallet,
 } from "@/lib/learning-progress-shared";
-import { getAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
+import { requireAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
 
 type LearningProgressPayload = {
   insforgeUserId: string;
@@ -148,17 +148,8 @@ function getCurrentChapterDocumentId(
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const authenticatedUser = await getAuthenticatedInsforgeUser(request);
-    const requestedUserId = searchParams.get("insforgeUserId");
-    const insforgeUserId = authenticatedUser?.id ?? requestedUserId;
-
-    if (!insforgeUserId) {
-      return NextResponse.json(
-        { error: "Missing insforgeUserId query parameter." },
-        { status: 400 },
-      );
-    }
+    const authenticatedUser = await requireAuthenticatedInsforgeUser(request);
+    const insforgeUserId = authenticatedUser.id;
 
     const [appUser, courseProgressDocuments] = await Promise.all([
       findAppUserByInsforgeId(insforgeUserId),
@@ -169,14 +160,11 @@ export async function GET(request: Request) {
       snapshot: toSnapshot(appUser, courseProgressDocuments),
     });
   } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unable to load learning progress from Sanity.";
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to load learning progress from Sanity.",
-      },
-      { status: 500 },
+      { error: message },
+      { status: message === "Unauthorized" ? 401 : 500 },
     );
   }
 }
@@ -184,7 +172,7 @@ export async function GET(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const authenticatedUser = await getAuthenticatedInsforgeUser(request);
+    const authenticatedUser = await requireAuthenticatedInsforgeUser(request);
 
     if (!isLearningProgressPayload(body)) {
       return NextResponse.json(
@@ -193,7 +181,7 @@ export async function PATCH(request: Request) {
       );
     }
 
-    if (authenticatedUser && authenticatedUser.id !== body.insforgeUserId) {
+    if (authenticatedUser.id !== body.insforgeUserId) {
       return NextResponse.json(
         { error: "Authenticated user does not match the supplied learning progress payload." },
         { status: 403 },
@@ -201,9 +189,7 @@ export async function PATCH(request: Request) {
     }
 
     const snapshot = normalizeLearningProgressSnapshot(body.snapshot);
-    const billingDocument = authenticatedUser
-      ? await findAppUserBillingByInsforgeId(authenticatedUser.id)
-      : null;
+    const billingDocument = await findAppUserBillingByInsforgeId(authenticatedUser.id);
     const subscriptionStatus = billingDocument?.stripeSubscriptionStatus ?? null;
 
     const targetCourseIds = new Set([
@@ -258,14 +244,11 @@ export async function PATCH(request: Request) {
       snapshot: toSnapshot(updatedAppUser, updatedCourseProgressDocuments),
     });
   } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unable to save learning progress to Sanity.";
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to save learning progress to Sanity.",
-      },
-      { status: 500 },
+      { error: message },
+      { status: message === "Unauthorized" ? 401 : 500 },
     );
   }
 }

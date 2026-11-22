@@ -1,4 +1,5 @@
 import type { AppUserProfile } from "@/lib/app-user-profile";
+import { buildAuthenticatedHeaders } from "@/lib/authenticated-fetch";
 
 type ProfileResponse = {
   error?: string;
@@ -18,6 +19,7 @@ export async function fetchUserProfile(insforgeUserId: string) {
     {
       method: "GET",
       cache: "no-store",
+      headers: buildAuthenticatedHeaders(),
     },
   );
 
@@ -37,9 +39,9 @@ export async function fetchUserProfile(insforgeUserId: string) {
 export async function updateUserProfile(payload: ProfileUpdatePayload) {
   const response = await fetch("/api/profile", {
     method: "PATCH",
-    headers: {
+    headers: buildAuthenticatedHeaders({
       "Content-Type": "application/json",
-    },
+    }),
     body: JSON.stringify(payload),
   });
 
