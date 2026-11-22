@@ -6,7 +6,7 @@ import { getStripe } from "@/lib/stripe";
 import {
   findAppUserBillingByInsforgeId,
   updateAppUserBillingDocument,
-} from "@/lib/strapi-billing";
+} from "@/lib/cms-billing";
 
 type CheckoutPayload = {
   plan?: string;
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const appUser = await findAppUserBillingByInsforgeId(user.id);
 
     if (!appUser) {
-      return NextResponse.json({ error: "App user not found in Strapi." }, { status: 404 });
+      return NextResponse.json({ error: "App user not found in Sanity." }, { status: 404 });
     }
 
     const stripe = getStripe();

@@ -1,5 +1,5 @@
 import { buildAuthenticatedHeaders } from "@/lib/authenticated-fetch";
-import type { CourseRecord, CourseChapterRecord } from "@/lib/strapi-courses";
+import type { CourseRecord, CourseChapterRecord } from "@/lib/cms-courses";
 import type { CourseAccessType } from "@/lib/billing";
 
 export type CourseAccessResponse = {

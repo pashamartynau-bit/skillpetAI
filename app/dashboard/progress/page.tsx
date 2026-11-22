@@ -54,7 +54,7 @@ export default function ProgressPage() {
         startTransition(() => {
           setCourses([]);
           setCoursesError(
-            error instanceof Error ? error.message : "Failed to load courses from Strapi.",
+            error instanceof Error ? error.message : "Failed to load courses from Sanity.",
           );
           setLoadingCourses(false);
         });

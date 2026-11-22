@@ -8,21 +8,19 @@ import {
   type CourseAccessType,
 } from "@/lib/billing";
 import {
-  fetchPublishedCourses,
   fetchPublishedCourseBySlug,
   fetchPublishedCourseChapter,
+  fetchPublishedCourses,
   type CourseRecord,
-} from "@/lib/strapi-courses";
+} from "@/lib/cms-courses";
+import {
+  findAppUserByInsforgeId,
+  findAppUserByStripeCustomerId,
+  upsertAppUser,
+  type AppUserRecord,
+} from "@/lib/cms-users";
 
-type StrapiListResponse<TDocument> = {
-  data: TDocument[];
-};
-
-type StrapiSingleResponse<TDocument> = {
-  data: TDocument;
-};
-
-export type StrapiAppUserBillingDocument = {
+export type AppUserBillingRecord = {
   documentId: string;
   email?: string | null;
   stripeBillingPlan?: BillingPlan | null;
@@ -35,82 +33,52 @@ export type StrapiAppUserBillingDocument = {
   stripeSubscriptionStatus?: string | null;
 };
 
-const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
-const STRAPI_USERS_COLLECTION = process.env.STRAPI_USERS_COLLECTION ?? "app-users";
-
-function getHeaders() {
-  if (!STRAPI_API_TOKEN) {
-    throw new Error("Missing STRAPI_API_TOKEN.");
-  }
-
+function toBillingRecord(user: AppUserRecord): AppUserBillingRecord {
   return {
-    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-    "Content-Type": "application/json",
+    documentId: user._id,
+    email: user.email,
+    stripeBillingPlan: user.stripeBillingPlan ?? null,
+    stripeCheckoutSessionId: user.stripeCheckoutSessionId ?? null,
+    stripeCustomerId: user.stripeCustomerId ?? null,
+    stripeLatestPaymentStatus: user.stripeLatestPaymentStatus ?? null,
+    stripeSubscriptionCurrentPeriodEnd: user.stripeSubscriptionCurrentPeriodEnd ?? null,
+    stripeSubscriptionId: user.stripeSubscriptionId ?? null,
+    stripeSubscriptionStartDate: user.stripeSubscriptionStartDate ?? null,
+    stripeSubscriptionStatus: user.stripeSubscriptionStatus ?? null,
   };
 }
 
-async function strapiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(new URL(path, STRAPI_BASE_URL), {
-    ...init,
-    cache: "no-store",
-    headers: {
-      ...getHeaders(),
-      ...(init?.headers ?? {}),
-    },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Strapi request failed with ${response.status}: ${errorText || response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
 export async function findAppUserBillingByInsforgeId(insforgeUserId: string) {
-  const params = new URLSearchParams({
-    "filters[insforgeUserId][$eq]": insforgeUserId,
-    "pagination[pageSize]": "1",
-  });
-
-  const response = await strapiFetch<StrapiListResponse<StrapiAppUserBillingDocument>>(
-    `/api/${STRAPI_USERS_COLLECTION}?${params.toString()}`,
-    { method: "GET" },
-  );
-
-  return response.data[0] ?? null;
+  const user = await findAppUserByInsforgeId(insforgeUserId);
+  return user ? toBillingRecord(user) : null;
 }
 
 export async function findAppUserBillingByStripeCustomerId(stripeCustomerId: string) {
-  const params = new URLSearchParams({
-    "filters[stripeCustomerId][$eq]": stripeCustomerId,
-    "pagination[pageSize]": "1",
-  });
-
-  const response = await strapiFetch<StrapiListResponse<StrapiAppUserBillingDocument>>(
-    `/api/${STRAPI_USERS_COLLECTION}?${params.toString()}`,
-    { method: "GET" },
-  );
-
-  return response.data[0] ?? null;
+  const user = await findAppUserByStripeCustomerId(stripeCustomerId);
+  return user ? toBillingRecord(user) : null;
 }
 
 export async function updateAppUserBillingDocument(
   documentId: string,
-  data: Partial<StrapiAppUserBillingDocument>,
+  data: Partial<AppUserBillingRecord>,
 ) {
-  const response = await strapiFetch<StrapiSingleResponse<StrapiAppUserBillingDocument>>(
-    `/api/${STRAPI_USERS_COLLECTION}/${documentId}`,
-    {
-      body: JSON.stringify({ data }),
-      method: "PUT",
-    },
-  );
+  const user = await findAppUserByInsforgeIdFromDocument(documentId);
 
-  return response.data;
+  if (!user) {
+    throw new Error("Learner billing record was not found in Sanity.");
+  }
+
+  const { documentId: _ignored, ...fields } = data;
+  const updated = await upsertAppUser(user.insforgeUserId, fields);
+  return toBillingRecord(updated);
+}
+
+async function findAppUserByInsforgeIdFromDocument(documentId: string) {
+  const { getSanityClient } = await import("@/lib/sanity");
+  return getSanityClient().fetch<AppUserRecord | null>(
+    `*[_type == "appUser" && _id == $documentId][0]{ _id, insforgeUserId }`,
+    { documentId },
+  );
 }
 
 export function getBillingPlanFromStripePrice(
@@ -178,21 +146,12 @@ export type CourseAccessSnapshot = {
   unlockedChapterIds: string[];
 };
 
-export async function getCourseAccessSnapshot(
-  slug: string,
+function buildAccessSnapshot(
+  course: CourseRecord,
   subscriptionStatus: string | null | undefined,
-) {
-  const course = await fetchPublishedCourseBySlug(slug);
-
-  if (!course) {
-    return null;
-  }
-
+): CourseAccessSnapshot {
   const hasActiveSubscription = isSubscriptionActive(subscriptionStatus);
-  const courseAccessType = normalizeCourseAccessType(
-    (course as CourseRecord & { accessType?: string | null }).accessType,
-  );
-
+  const courseAccessType = normalizeCourseAccessType(course.accessType);
   let unlockedChapterIds = course.chapters.map((chapter) => chapter.id);
   let canEnroll = true;
   let canAccessCourse = true;
@@ -220,7 +179,15 @@ export async function getCourseAccessSnapshot(
     hasActiveSubscription,
     lockedReason,
     unlockedChapterIds,
-  } satisfies CourseAccessSnapshot;
+  };
+}
+
+export async function getCourseAccessSnapshot(
+  slug: string,
+  subscriptionStatus: string | null | undefined,
+) {
+  const course = await fetchPublishedCourseBySlug(slug);
+  return course ? buildAccessSnapshot(course, subscriptionStatus) : null;
 }
 
 export async function getChapterAccessSnapshot(
@@ -253,40 +220,5 @@ export async function getCourseAccessSnapshotByDocumentId(
 ) {
   const courses = await fetchPublishedCourses();
   const course = courses.find((candidate) => candidate.documentId === courseDocumentId) ?? null;
-
-  if (!course) {
-    return null;
-  }
-
-  const hasActiveSubscription = isSubscriptionActive(subscriptionStatus);
-  const courseAccessType = normalizeCourseAccessType(course.accessType);
-
-  let unlockedChapterIds = course.chapters.map((chapter) => chapter.id);
-  let canEnroll = true;
-  let canAccessCourse = true;
-  let lockedReason: string | null = null;
-
-  if (courseAccessType === "freemium" && !hasActiveSubscription) {
-    unlockedChapterIds = course.chapters
-      .slice(0, FREEMIUM_FREE_CHAPTER_COUNT)
-      .map((chapter) => chapter.id);
-    lockedReason = "Upgrade to unlock all chapters in this freemium course.";
-  }
-
-  if (courseAccessType === "paid" && !hasActiveSubscription) {
-    unlockedChapterIds = [];
-    canEnroll = false;
-    canAccessCourse = false;
-    lockedReason = "An active subscription is required for this paid course.";
-  }
-
-  return {
-    canAccessCourse,
-    canEnroll,
-    course,
-    courseAccessType,
-    hasActiveSubscription,
-    lockedReason,
-    unlockedChapterIds,
-  } satisfies CourseAccessSnapshot;
+  return course ? buildAccessSnapshot(course, subscriptionStatus) : null;
 }

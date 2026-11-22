@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 
 import {
+  findAppUserBillingByInsforgeId,
+  getCourseAccessSnapshotByDocumentId,
+} from "@/lib/cms-billing";
+import {
+  findAppUserByInsforgeId,
+  listCourseProgressByInsforgeId,
+  replaceCourseProgress,
+  upsertAppUser,
+  type AppUserRecord,
+  type CourseProgressRecord,
+} from "@/lib/cms-users";
+import {
   buildChapterProgressKey,
   createDefaultLearningProgressSnapshot,
   createDefaultLearningWallet,
@@ -11,60 +23,11 @@ import {
   type LearningWallet,
 } from "@/lib/learning-progress-shared";
 import { getAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
-import {
-  findAppUserBillingByInsforgeId,
-  getCourseAccessSnapshotByDocumentId,
-} from "@/lib/strapi-billing";
-
-type StrapiCourseRelation = {
-  documentId: string;
-};
-
-type StrapiChapterRelation = {
-  documentId: string;
-};
-
-type StrapiAppUserDocument = {
-  dailyStreakCount?: number | null;
-  documentId: string;
-  gems?: number | null;
-  hearts?: number | null;
-  insforgeUserId?: string;
-  lastDailyStreakAwardedOn?: string | null;
-};
-
-type StrapiUserCourseProgressDocument = {
-  activityTimestamps?: unknown;
-  chapterProgressMap?: unknown;
-  course?: StrapiCourseRelation | null;
-  currentChapter?: StrapiChapterRelation | null;
-  documentId: string;
-  enrolledAt?: string | null;
-  insforgeUserId?: string;
-  isCompleted?: boolean | null;
-  isEnrolled?: boolean | null;
-  lastActivityAt?: string | null;
-  progressPercent?: number | null;
-};
-
-type StrapiListResponse<TDocument> = {
-  data: TDocument[];
-};
-
-type StrapiSingleResponse<TDocument> = {
-  data: TDocument;
-};
 
 type LearningProgressPayload = {
   insforgeUserId: string;
   snapshot: LearningProgressSnapshot;
 };
-
-const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
-const STRAPI_USERS_COLLECTION = process.env.STRAPI_USERS_COLLECTION ?? "app-users";
-const STRAPI_USER_COURSE_PROGRESS_COLLECTION =
-  process.env.STRAPI_USER_COURSE_PROGRESS_COLLECTION ?? "user-course-progresses";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -78,67 +41,7 @@ function isLearningProgressPayload(value: unknown): value is LearningProgressPay
   );
 }
 
-function getHeaders() {
-  if (!STRAPI_API_TOKEN) {
-    throw new Error("Missing STRAPI_API_TOKEN.");
-  }
-
-  return {
-    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function strapiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(new URL(path, STRAPI_BASE_URL), {
-    ...init,
-    headers: {
-      ...getHeaders(),
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Strapi request failed with ${response.status}: ${errorText || response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
-async function findAppUserByInsforgeId(insforgeUserId: string) {
-  const params = new URLSearchParams({
-    "filters[insforgeUserId][$eq]": insforgeUserId,
-    "pagination[pageSize]": "1",
-  });
-
-  const response = await strapiFetch<StrapiListResponse<StrapiAppUserDocument>>(
-    `/api/${STRAPI_USERS_COLLECTION}?${params.toString()}`,
-    { method: "GET" },
-  );
-
-  return response.data[0] ?? null;
-}
-
-async function listUserCourseProgressByInsforgeId(insforgeUserId: string) {
-  const params = new URLSearchParams({
-    "filters[insforgeUserId][$eq]": insforgeUserId,
-    "pagination[pageSize]": "200",
-    populate: "course,currentChapter",
-  });
-
-  const response = await strapiFetch<StrapiListResponse<StrapiUserCourseProgressDocument>>(
-    `/api/${STRAPI_USER_COURSE_PROGRESS_COLLECTION}?${params.toString()}`,
-    { method: "GET" },
-  );
-
-  return response.data;
-}
-
-function toWallet(appUser: StrapiAppUserDocument | null): LearningWallet {
+function toWallet(appUser: AppUserRecord | null): LearningWallet {
   const defaultWallet = createDefaultLearningWallet();
 
   if (!appUser) {
@@ -172,13 +75,13 @@ function toGlobalChapterProgressMap(
 }
 
 function toSnapshot(
-  appUser: StrapiAppUserDocument | null,
-  courseProgressDocuments: StrapiUserCourseProgressDocument[],
+  appUser: AppUserRecord | null,
+  courseProgressDocuments: CourseProgressRecord[],
 ) {
   const snapshot = createDefaultLearningProgressSnapshot();
 
   for (const document of courseProgressDocuments) {
-    const courseId = document.course?.documentId;
+    const courseId = document.courseId;
 
     if (!courseId) {
       continue;
@@ -243,41 +146,6 @@ function getCurrentChapterDocumentId(
   return sortedEntries[0]?.[0] ?? null;
 }
 
-function buildAppUserWalletPayload(wallet: LearningWallet) {
-  return {
-    dailyStreakCount: wallet.dailyStreakCount,
-    gems: wallet.gems,
-    hearts: wallet.hearts,
-    lastDailyStreakAwardedOn: wallet.lastDailyStreakAwardedOn,
-  };
-}
-
-function buildUserCourseProgressPayload(
-  insforgeUserId: string,
-  courseId: string,
-  snapshot: LearningProgressSnapshot,
-) {
-  const courseRecord = snapshot.courseProgressMap[courseId];
-  const chapterEntries = getCourseChapterProgressEntries(snapshot, courseId);
-  const chapterProgressMap = Object.fromEntries(chapterEntries);
-  const currentChapterDocumentId = getCurrentChapterDocumentId(snapshot, courseId);
-
-  return {
-    data: {
-      activityTimestamps: courseRecord?.activityTimestamps ?? [],
-      chapterProgressMap,
-      course: courseId,
-      currentChapter: currentChapterDocumentId,
-      enrolledAt: courseRecord?.enrolledAt ?? new Date().toISOString(),
-      insforgeUserId,
-      isCompleted: (courseRecord?.progressPercent ?? 0) >= 100,
-      isEnrolled: snapshot.enrolledCourseIds.includes(courseId),
-      lastActivityAt: courseRecord?.lastProgressAt ?? null,
-      progressPercent: courseRecord?.progressPercent ?? 0,
-    },
-  };
-}
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -294,7 +162,7 @@ export async function GET(request: Request) {
 
     const [appUser, courseProgressDocuments] = await Promise.all([
       findAppUserByInsforgeId(insforgeUserId),
-      listUserCourseProgressByInsforgeId(insforgeUserId),
+      listCourseProgressByInsforgeId(insforgeUserId),
     ]);
 
     return NextResponse.json({
@@ -306,7 +174,7 @@ export async function GET(request: Request) {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to load learning progress from Strapi.",
+            : "Unable to load learning progress from Sanity.",
       },
       { status: 500 },
     );
@@ -337,41 +205,6 @@ export async function PATCH(request: Request) {
       ? await findAppUserBillingByInsforgeId(authenticatedUser.id)
       : null;
     const subscriptionStatus = billingDocument?.stripeSubscriptionStatus ?? null;
-    const [existingAppUser, existingCourseProgressDocuments] = await Promise.all([
-      findAppUserByInsforgeId(body.insforgeUserId),
-      listUserCourseProgressByInsforgeId(body.insforgeUserId),
-    ]);
-
-    const appUserPayload = JSON.stringify({
-      data: {
-        insforgeUserId: body.insforgeUserId,
-        ...buildAppUserWalletPayload(snapshot.wallet),
-      },
-    });
-
-    if (existingAppUser) {
-      await strapiFetch<StrapiSingleResponse<StrapiAppUserDocument>>(
-        `/api/${STRAPI_USERS_COLLECTION}/${existingAppUser.documentId}`,
-        {
-          method: "PUT",
-          body: appUserPayload,
-        },
-      );
-    } else {
-      await strapiFetch<StrapiSingleResponse<StrapiAppUserDocument>>(
-        `/api/${STRAPI_USERS_COLLECTION}`,
-        {
-          method: "POST",
-          body: appUserPayload,
-        },
-      );
-    }
-
-    const existingByCourseId = new Map(
-      existingCourseProgressDocuments
-        .map((document) => [document.course?.documentId, document] as const)
-        .filter(([courseId]) => Boolean(courseId)),
-    );
 
     const targetCourseIds = new Set([
       ...snapshot.enrolledCourseIds,
@@ -393,34 +226,32 @@ export async function PATCH(request: Request) {
       }
     }
 
-    for (const courseId of targetCourseIds) {
-      const payload = JSON.stringify(
-        buildUserCourseProgressPayload(body.insforgeUserId, courseId, snapshot),
-      );
-      const existingDocument = existingByCourseId.get(courseId);
+    await upsertAppUser(body.insforgeUserId, {
+      dailyStreakCount: snapshot.wallet.dailyStreakCount,
+      gems: snapshot.wallet.gems,
+      hearts: snapshot.wallet.hearts,
+      lastDailyStreakAwardedOn: snapshot.wallet.lastDailyStreakAwardedOn,
+    });
 
-      if (existingDocument) {
-        await strapiFetch<StrapiSingleResponse<StrapiUserCourseProgressDocument>>(
-          `/api/${STRAPI_USER_COURSE_PROGRESS_COLLECTION}/${existingDocument.documentId}`,
-          {
-            method: "PUT",
-            body: payload,
-          },
-        );
-      } else {
-        await strapiFetch<StrapiSingleResponse<StrapiUserCourseProgressDocument>>(
-          `/api/${STRAPI_USER_COURSE_PROGRESS_COLLECTION}`,
-          {
-            method: "POST",
-            body: payload,
-          },
-        );
-      }
+    for (const courseId of targetCourseIds) {
+      const courseRecord = snapshot.courseProgressMap[courseId];
+      const chapterEntries = getCourseChapterProgressEntries(snapshot, courseId);
+
+      await replaceCourseProgress(body.insforgeUserId, courseId, {
+        activityTimestamps: courseRecord?.activityTimestamps ?? [],
+        chapterProgressMap: Object.fromEntries(chapterEntries),
+        currentChapterId: getCurrentChapterDocumentId(snapshot, courseId),
+        enrolledAt: courseRecord?.enrolledAt ?? new Date().toISOString(),
+        isCompleted: (courseRecord?.progressPercent ?? 0) >= 100,
+        isEnrolled: snapshot.enrolledCourseIds.includes(courseId),
+        lastActivityAt: courseRecord?.lastProgressAt ?? null,
+        progressPercent: courseRecord?.progressPercent ?? 0,
+      });
     }
 
     const [updatedAppUser, updatedCourseProgressDocuments] = await Promise.all([
       findAppUserByInsforgeId(body.insforgeUserId),
-      listUserCourseProgressByInsforgeId(body.insforgeUserId),
+      listCourseProgressByInsforgeId(body.insforgeUserId),
     ]);
 
     return NextResponse.json({
@@ -432,7 +263,7 @@ export async function PATCH(request: Request) {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to save learning progress to Strapi.",
+            : "Unable to save learning progress to Sanity.",
       },
       { status: 500 },
     );

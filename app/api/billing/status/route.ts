@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { findAppUserBillingByInsforgeId } from "@/lib/strapi-billing";
+import { findAppUserBillingByInsforgeId } from "@/lib/cms-billing";
 import { requireAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
 
 export async function GET(request: Request) {

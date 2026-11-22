@@ -1,6 +1,6 @@
 # Omni AI
 
-Omni AI is a premium, gamified educational learning platform built with **Next.js 16**, **React 19**, **InsForge**, **Strapi Headless CMS**, and **Stripe**.
+Omni AI is a premium, gamified educational learning platform built with **Next.js 16**, **React 19**, **InsForge**, **Sanity**, and **Stripe**.
 
 It transforms online education with virtual companions that accompany learners throughout their journey. By completing chapters, passing quizzes, and maintaining daily learning streaks, users earn gems and hearts, leveling up their chosen pets.
 
@@ -13,7 +13,7 @@ It transforms online education with virtual companions that accompany learners t
 - **AI Pet Companion**: Pick and customize a companion character (from `/public/characters`) that grows as you complete courses.
 - **Daily Streak Calendar**: Interactive streak system to encourage daily learning habits.
 - **Stripe Subscriptions**: Seamlessly unlock premium courses with Monthly or Yearly payment plans.
-- **Secure Authentication**: Power-packed auth flow via InsForge with automatic user profile synchronization to Strapi.
+- **Secure Authentication**: Power-packed auth flow via InsForge with automatic user profile synchronization to Sanity.
 - **Responsive Premium Dashboard**: Beautifully designed dashboard shell with dark mode, interactive charts, and animations.
 
 ---
@@ -23,7 +23,7 @@ It transforms online education with virtual companions that accompany learners t
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
 - **UI & Styling**: [React 19](https://react.dev/), [Tailwind CSS v4](https://tailwindcss.com/), [Lucide Icons](https://lucide.dev/), [Base UI](https://base-ui.com/), and [Shadcn UI](https://ui.shadcn.com/)
 - **BaaS (Backend & Auth)**: [@insforge/sdk](https://www.insforge.com/) (Auth, PostgreSQL DB)
-- **CMS**: [Strapi Headless CMS](https://strapi.io/)
+- **CMS**: [Sanity](https://www.sanity.io/)
 - **Payments**: [Stripe API & CLI](https://stripe.com/)
 
 ---
@@ -60,11 +60,10 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_INSFORGE_BASE_URL=https://your-app.insforge.app/
 NEXT_PUBLIC_INSFORGE_ANON_KEY=ik_your_anon_key_here
 
-# Strapi CMS Settings
-STRAPI_BASE_URL=http://localhost:1337
-STRAPI_API_TOKEN=your_strapi_api_token
-STRAPI_USERS_COLLECTION=app-users
-STRAPI_USER_COURSE_PROGRESS_COLLECTION=user-course-progresses
+# Sanity CMS
+SANITY_PROJECT_ID=njws1rbr
+SANITY_DATASET=production
+SANITY_API_TOKEN=your_sanity_api_token
 
 # Stripe Billing Settings
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
@@ -111,7 +110,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 │   └── auth-screen.tsx       # Gamified sign-in/sign-up screen
 ├── docs/                     # Extended documentation
 │   ├── setup.md              # Environment & API setup guide
-│   └── strapi-collections.md # Strapi Database schema collections
+│   └── cms.md                # Sanity content model
 ├── hooks/                    # Custom React hooks
 ├── lib/                      # Helper libraries, API utilities, and configs
 └── public/                   # Static assets (character sprites, icons, illustrations)
@@ -122,4 +121,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 ## 📖 Documentation Links
 
 - 🛠️ [Detailed Project Setup Guide](docs/setup.md)
-- 🗄️ [Strapi Collections Schema Definition](docs/strapi-collections.md)
+- 🗄️ [Sanity Content Model](docs/cms.md)

@@ -1,4 +1,4 @@
-import type { CourseRecord as DashboardCourse } from "@/lib/strapi-courses";
+import type { CourseRecord as DashboardCourse } from "@/lib/cms-courses";
 
 export type { DashboardCourse };
 
@@ -16,7 +16,7 @@ export async function fetchDashboardCourses() {
   const payload = (await response.json()) as CoursesResponse;
 
   if (!response.ok || !payload.courses) {
-    throw new Error(payload.error ?? "Failed to load courses from Strapi.");
+    throw new Error(payload.error ?? "Failed to load courses from Sanity.");
   }
 
   return payload.courses;

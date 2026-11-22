@@ -9,7 +9,7 @@ import {
   ProgressIndicator,
   ProgressTrack,
 } from "@/components/ui/progress";
-import type { CourseChapterRecord } from "@/lib/strapi-courses";
+import type { CourseChapterRecord } from "@/lib/cms-courses";
 import { getCourseProgressRecord, subscribeToLearningProgress } from "@/lib/learning-progress";
 import { cn } from "@/lib/utils";
 
