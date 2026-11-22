@@ -1,37 +1,6 @@
 import { createClient, type UserSchema } from "@insforge/sdk";
 
-const INSFORGE_BASE_URL = process.env.NEXT_PUBLIC_INSFORGE_BASE_URL;
-const INSFORGE_ANON_KEY = process.env.NEXT_PUBLIC_INSFORGE_ANON_KEY;
-
-function createDemoUser(): UserSchema {
-  const timestamp = new Date().toISOString();
-
-  const demo = {
-    created_at: timestamp,
-    email: "demo@skillpet.ai",
-    emailVerified: true,
-    id: "demo-user-1",
-    last_sign_in_at: timestamp,
-    profile: {
-      avatar_url: "/characters/Byte_1.png",
-      name: "Demo Learner",
-    },
-    updated_at: timestamp,
-  } as unknown as UserSchema;
-
-  return demo;
-}
-
-function getInsforgeConfig() {
-  if (!INSFORGE_BASE_URL || !INSFORGE_ANON_KEY) {
-    return null;
-  }
-
-  return {
-    anonKey: INSFORGE_ANON_KEY,
-    baseUrl: INSFORGE_BASE_URL,
-  };
-}
+import { getInsforgeAnonKey, getInsforgeBaseUrl } from "@/lib/insforge-config";
 
 export function getBearerTokenFromRequest(request: Request) {
   const authorization = request.headers.get("authorization")?.trim();
@@ -47,20 +16,15 @@ export function getBearerTokenFromRequest(request: Request) {
 export async function getAuthenticatedInsforgeUser(request: Request): Promise<UserSchema | null> {
   const accessToken = getBearerTokenFromRequest(request);
 
-  if (!INSFORGE_BASE_URL || !INSFORGE_ANON_KEY) {
-    if (!accessToken || accessToken === "demo-token") {
-      return createDemoUser();
-    }
+  if (!accessToken || accessToken === "demo-token") {
     return null;
   }
 
-  if (!accessToken) {
-    return null;
-  }
-
+  const anonKey = getInsforgeAnonKey();
   const client = createClient({
-    ...getInsforgeConfig(),
     accessToken,
+    baseUrl: getInsforgeBaseUrl(),
+    ...(anonKey ? { anonKey } : {}),
   });
   const { data, error } = await client.auth.getCurrentUser();
 
@@ -80,4 +44,3 @@ export async function requireAuthenticatedInsforgeUser(request: Request) {
 
   return user;
 }
-

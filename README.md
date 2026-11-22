@@ -57,7 +57,7 @@ Populate the `.env` file with your credentials:
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # InsForge Keys (Authentication & PostgreSQL)
-NEXT_PUBLIC_INSFORGE_BASE_URL=https://your-app.insforge.app/
+NEXT_PUBLIC_INSFORGE_BASE_URL=https://p38xiybh.us-west.insforge.app
 NEXT_PUBLIC_INSFORGE_ANON_KEY=ik_your_anon_key_here
 
 # Sanity CMS

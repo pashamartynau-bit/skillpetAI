@@ -57,7 +57,7 @@ Sanity is the CMS for courses, chapters, learner profiles, and progress. The app
    - A Sanity API token with Editor or Developer access to the Learn AI project.
    - Create it in [sanity.io/manage](https://www.sanity.io/manage) under the project API settings.
    - Keep this value on the server. Do not commit it or expose it with a `NEXT_PUBLIC_` name.
-   - When the token is absent, sign-in stays in demo mode and course reads fail until it is set.
+   - Course and profile reads use this token on the server. Sign-in uses the InsForge project, not a local demo user.
 
 The document shapes are listed in [the Sanity content model](cms.md).
 

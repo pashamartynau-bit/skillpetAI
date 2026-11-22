@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { SyncedAuthUser } from "@/lib/auth-user";
 import { findAppUserByEmail, findAppUserByInsforgeId, upsertAppUser } from "@/lib/cms-users";
 import { hasSanityConfig } from "@/lib/sanity";
+import { requireAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -32,13 +33,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const authenticatedUser = await requireAuthenticatedInsforgeUser(request);
+
+    if (authenticatedUser.id !== body.insforgeUserId || authenticatedUser.email !== body.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
       if (!hasSanityConfig()) {
-        return NextResponse.json({
-          ok: true,
-          operation: "demo-mode",
-          documentId: `demo-${body.insforgeUserId}`,
-        });
+        throw new Error("Missing SANITY_API_TOKEN.");
       }
 
       const existingDocument =
@@ -71,14 +74,11 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unable to sync authenticated user to Sanity.";
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to sync authenticated user to Sanity.",
-      },
-      { status: 500 },
+      { error: message },
+      { status: message === "Unauthorized" ? 401 : 500 },
     );
   }
 }

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import type { AppUserProfile } from "@/lib/app-user-profile";
+import { buildAuthenticatedHeaders } from "@/lib/authenticated-fetch";
 import { getAppUrl, getInsforgeBrowserClient } from "@/lib/insforge-browser";
 import { mapInsforgeUserToSyncPayload } from "@/lib/auth-user";
 
@@ -276,9 +277,9 @@ export function AuthScreen() {
 
     const response = await fetch("/api/auth/sync", {
       method: "POST",
-      headers: {
+      headers: buildAuthenticatedHeaders({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify(mapInsforgeUserToSyncPayload(user)),
     });
 
@@ -313,6 +314,7 @@ export function AuthScreen() {
         {
           method: "GET",
           cache: "no-store",
+          headers: buildAuthenticatedHeaders(),
         },
       );
 

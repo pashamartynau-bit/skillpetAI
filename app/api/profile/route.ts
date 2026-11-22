@@ -7,6 +7,7 @@ import type {
 } from "@/lib/app-user-profile";
 import { findAppUserByInsforgeId, upsertAppUser, type AppUserRecord } from "@/lib/cms-users";
 import { hasSanityConfig } from "@/lib/sanity";
+import { requireAuthenticatedInsforgeUser } from "@/lib/server-insforge-auth";
 
 type ProfileUpdatePayload = {
   insforgeUserId: string;
@@ -128,6 +129,12 @@ export async function GET(request: Request) {
       );
     }
 
+    const authenticatedUser = await requireAuthenticatedInsforgeUser(request);
+
+    if (authenticatedUser.id !== insforgeUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
       if (!hasSanityConfig()) {
         throw new Error("Missing SANITY_API_TOKEN.");
@@ -153,14 +160,10 @@ export async function GET(request: Request) {
       );
     }
   } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to load the user profile.";
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to load the user profile.",
-      },
-      { status: 500 },
+      { error: message },
+      { status: message === "Unauthorized" ? 401 : 500 },
     );
   }
 }
@@ -174,6 +177,12 @@ export async function PATCH(request: Request) {
         { error: "Invalid character selection payload." },
         { status: 400 },
       );
+    }
+
+    const authenticatedUser = await requireAuthenticatedInsforgeUser(request);
+
+    if (authenticatedUser.id !== body.insforgeUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {
@@ -203,14 +212,10 @@ export async function PATCH(request: Request) {
       );
     }
   } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to save the selected character.";
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unable to save the selected character.",
-      },
-      { status: 500 },
+      { error: message },
+      { status: message === "Unauthorized" ? 401 : 500 },
     );
   }
 }
