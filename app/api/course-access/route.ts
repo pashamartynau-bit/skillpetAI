@@ -7,6 +7,15 @@ import {
   getCourseAccessSnapshot,
 } from "@/lib/strapi-billing";
 
+async function readSubscriptionStatus(userId: string | undefined) {
+  if (!userId || !process.env.STRAPI_API_TOKEN) {
+    return null;
+  }
+
+  const billingDocument = await findAppUserBillingByInsforgeId(userId);
+  return billingDocument?.stripeSubscriptionStatus ?? null;
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -18,8 +27,7 @@ export async function GET(request: Request) {
     }
 
     const user = await getAuthenticatedInsforgeUser(request);
-    const billingDocument = user ? await findAppUserBillingByInsforgeId(user.id) : null;
-    const subscriptionStatus = billingDocument?.stripeSubscriptionStatus ?? null;
+    const subscriptionStatus = await readSubscriptionStatus(user?.id);
 
     if (chapterSlug) {
       const chapterSnapshot = await getChapterAccessSnapshot(slug, chapterSlug, subscriptionStatus);

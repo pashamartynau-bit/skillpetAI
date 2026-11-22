@@ -1,4 +1,5 @@
 import { normalizeCourseAccessType, type CourseAccessType } from "@/lib/billing";
+import { AI_COURSE_SOURCES } from "@/lib/ai-courses";
 
 export type StrapiCourseMedia = {
   alternativeText?: string | null;
@@ -115,10 +116,6 @@ type StrapiCodeExerciseBlock = StrapiBaseContentBlock & {
 };
 
 type StrapiUnknownBlock = StrapiBaseContentBlock & Record<string, unknown>;
-
-type StrapiCoursesResponse = {
-  data: StrapiCourse[];
-};
 
 export type CourseChapterRecord = {
   chapterNumber: number | null;
@@ -250,41 +247,13 @@ export type CourseRecord = {
 };
 
 const STRAPI_BASE_URL = process.env.STRAPI_BASE_URL ?? "http://localhost:1337";
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
-
-function getHeaders() {
-  if (!STRAPI_API_TOKEN) {
-    throw new Error("Missing STRAPI_API_TOKEN.");
-  }
-
-  return {
-    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-    "Content-Type": "application/json",
-  };
-}
-
-async function strapiFetch<T>(path: string): Promise<T> {
-  const response = await fetch(new URL(path, STRAPI_BASE_URL), {
-    headers: getHeaders(),
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Strapi request failed with ${response.status}: ${errorText || response.statusText}`,
-    );
-  }
-
-  return (await response.json()) as T;
-}
 
 function resolveMediaUrl(url: string | null | undefined) {
   if (!url) {
     return "/characters/Pip_1.png";
   }
 
-  if (url.startsWith("http://") || url.startsWith("https://")) {
+  if (url.startsWith("/") || url.startsWith("http://") || url.startsWith("https://")) {
     return url;
   }
 
@@ -664,47 +633,19 @@ function readString(value: unknown) {
   return value.trim();
 }
 
-function buildBaseCourseParams() {
-  const params = new URLSearchParams();
-  params.set("status", "published");
-  params.set("sort", "sortOrder:asc");
-  params.set("filters[isPublishedInApp][$eq]", "true");
-  params.set("populate[banner][fields][0]", "url");
-  params.set("populate[banner][fields][1]", "alternativeText");
-  params.set("populate[banner][fields][2]", "width");
-  params.set("populate[banner][fields][3]", "height");
-  return params;
-}
-
-export async function fetchPublishedCourses() {
-  const params = buildBaseCourseParams();
-  const response = await strapiFetch<StrapiCoursesResponse>(`/api/courses?${params.toString()}`);
-
-  return response.data
-    .map(normalizeCourse)
+function publishedAiCourses() {
+  return AI_COURSE_SOURCES.map(normalizeCourse)
     .filter((course): course is CourseRecord => course !== null)
     .sort((left, right) => left.sortOrder - right.sortOrder);
 }
 
-export async function fetchPublishedCourseBySlug(slug: string) {
-  const params = buildBaseCourseParams();
-  params.set("filters[slug][$eq]", slug);
-  params.set("populate[chapters][fields][0]", "name");
-  params.set("populate[chapters][fields][1]", "description");
-  params.set("populate[chapters][fields][2]", "slug");
-  params.set("populate[chapters][fields][3]", "chapterNumber");
-  params.set("populate[chapters][fields][4]", "sortOrder");
-  params.set("populate[chapters][fields][5]", "emoji");
-  params.set("populate[chapters][sort][0]", "sortOrder:asc");
-
-  const response = await strapiFetch<StrapiCoursesResponse>(`/api/courses?${params.toString()}`);
-  const course = response.data.map(normalizeCourse).find((value) => value !== null) ?? null;
-  return course;
+export async function fetchPublishedCourses() {
+  return publishedAiCourses();
 }
 
-type StrapiChaptersResponse = {
-  data: StrapiCourseChapter[];
-};
+export async function fetchPublishedCourseBySlug(slug: string) {
+  return publishedAiCourses().find((course) => course.slug === slug) ?? null;
+}
 
 export async function fetchPublishedCourseChapter(courseSlug: string, chapterSlug: string) {
   const course = await fetchPublishedCourseBySlug(courseSlug);
@@ -713,27 +654,10 @@ export async function fetchPublishedCourseChapter(courseSlug: string, chapterSlu
     return null;
   }
 
-  const params = new URLSearchParams();
-  params.set("status", "published");
-  params.set("filters[slug][$eq]", chapterSlug);
-  params.set("populate[contentBlocks][populate]", "*");
-
-  const response = await strapiFetch<StrapiChaptersResponse>(`/api/chapters?${params.toString()}`);
-  const rawChapter = response.data.find((chapter) => chapter.slug?.trim() === chapterSlug) ?? null;
-
-  if (!rawChapter) {
-    return null;
-  }
-
-  const chapter = normalizeChapters([rawChapter], course.slug)[0] ?? null;
+  const chapterIndex = course.chapters.findIndex((chapter) => chapter.slug === chapterSlug);
+  const chapter = course.chapters[chapterIndex];
 
   if (!chapter) {
-    return null;
-  }
-
-  const chapterIndex = course.chapters.findIndex((item) => item.slug === chapter.slug);
-
-  if (chapterIndex < 0) {
     return null;
   }
 

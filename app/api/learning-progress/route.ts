@@ -292,6 +292,10 @@ export async function GET(request: Request) {
       );
     }
 
+    if (!process.env.STRAPI_API_TOKEN) {
+      return NextResponse.json({ snapshot: createDefaultLearningProgressSnapshot() });
+    }
+
     const [appUser, courseProgressDocuments] = await Promise.all([
       findAppUserByInsforgeId(insforgeUserId),
       listUserCourseProgressByInsforgeId(insforgeUserId),
@@ -333,6 +337,10 @@ export async function PATCH(request: Request) {
     }
 
     const snapshot = normalizeLearningProgressSnapshot(body.snapshot);
+
+    if (!process.env.STRAPI_API_TOKEN) {
+      return NextResponse.json({ snapshot });
+    }
     const billingDocument = authenticatedUser
       ? await findAppUserBillingByInsforgeId(authenticatedUser.id)
       : null;

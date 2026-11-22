@@ -19,7 +19,11 @@ type ChatMessage = {
   courses?: GuideCourse[];
 };
 
-const STARTER_PROMPTS = ["AI and machine learning", "Learn to code", "Data and analytics"];
+const STARTER_PROMPTS = [
+  "How does AI learn?",
+  "Help me write better prompts",
+  "What is an AI agent?",
+];
 
 export function CourseGuideChat() {
   const [isOpen, setIsOpen] = useState(false);

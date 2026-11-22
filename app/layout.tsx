@@ -25,11 +25,11 @@ export const metadata: Metadata = {
   },
   applicationName: "Omni AI",
   description:
-    "Find the right AI and technology courses, learn at your own pace, and track your progress with Omni AI.",
+    "Learn how AI works with short courses on models, prompting, agents, and checking answers.",
   openGraph: {
     title: "Omni AI",
     description:
-      "Find the right AI and technology courses, learn at your own pace, and track your progress with Omni AI.",
+      "Learn how AI works with short courses on models, prompting, agents, and checking answers.",
     siteName: "Omni AI",
     type: "website",
     images: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Omni AI",
     description:
-      "Find the right AI and technology courses, learn at your own pace, and track your progress with Omni AI.",
+      "Learn how AI works with short courses on models, prompting, agents, and checking answers.",
     images: ["/icons/favicon-150.png"],
   },
   icons: {

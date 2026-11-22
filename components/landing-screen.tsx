@@ -27,75 +27,83 @@ import { cn } from "@/lib/utils";
 const COMPANIONS = [
   {
     name: "Byte",
-    title: "The Cyber Pup",
-    desc: "Enjoys debugging code and eating bits of data. Perfect for beginner developers.",
+    title: "The Model Pup",
+    desc: "Starts at the beginning: what a model is, and how an answer gets made.",
     image: "/characters/Byte_1.png",
     evolvedImage: "/characters/Byte.png",
     accent: "bg-[#eef9f0] border-[#3cc74f]/20 text-[#25a53a]",
-    color: "#3cc74f"
+    color: "#3cc74f",
+    courses: ["How AI Learns", "Training and use", "Why answers vary"]
   },
   {
     name: "Hedge",
-    title: "The Prickly Coder",
-    desc: "Loves structured logic and optimization. A tough exterior but deep algorithmic core.",
+    title: "The Careful Checker",
+    desc: "Slows you down when a reply sounds sure. Practice finding fluent mistakes.",
     image: "/characters/Hedge_1.png",
     evolvedImage: "/characters/Hedge.png",
     accent: "bg-[#fff5ea] border-[#f3a850]/20 text-[#c87618]",
-    color: "#f3a850"
+    color: "#f3a850",
+    courses: ["Checking What AI Says", "Fluent and wrong", "Ask for the source"]
   },
   {
     name: "Kumo",
-    title: "The Cloud Kitty",
-    desc: "Dreamy and fluffy, specializes in scalable systems and network engineering.",
+    title: "The Tool Cat",
+    desc: "Likes watching an agent take a step, then reading what the tool actually did.",
     image: "/characters/Kumo_1.png",
     evolvedImage: "/characters/Kumo.png",
     accent: "bg-[#f4f7ff] border-[#5b8cff]/20 text-[#2c5ebd]",
-    color: "#5b8cff"
+    color: "#5b8cff",
+    courses: ["Working with AI Agents", "A model plus tools", "Bound the job"]
   },
   {
     name: "Milo",
-    title: "The Logic Monkey",
-    desc: "Full of energy! Loves math puzzles, boolean algebra, and sorting algorithms.",
+    title: "The Prompt Monkey",
+    desc: "Turns a vague ask into a task, a reader, and a format the model can follow.",
     image: "/characters/Milo_1.png",
     evolvedImage: "/characters/Milo.png",
     accent: "bg-[#fff2f2] border-[#ff6b6b]/20 text-[#c92a2a]",
-    color: "#ff6b6b"
+    color: "#ff6b6b",
+    courses: ["Prompting Language Models", "Instructions and context", "Shape the answer"]
   },
   {
     name: "Nimbus",
-    title: "The Wise Storm Owl",
-    desc: "Highly intellectual. Guides you through machine learning, AI, and neural networks.",
+    title: "The Agent Owl",
+    desc: "Guides you through agents: tools, limits, and the work you should keep.",
     image: "/characters/Nimbus_1.png",
     evolvedImage: "/characters/Nimbus.png",
     accent: "bg-[#f9f2ff] border-[#a855f7]/20 text-[#701a75]",
-    color: "#a855f7"
+    color: "#a855f7",
+    courses: ["Working with AI Agents", "Read the steps", "When to keep the work"]
   },
   {
     name: "Pip",
-    title: "The Scripting Penguin",
-    desc: "Playful and fast. A master of Python scripting, data scraping, and automation.",
+    title: "The Prompt Penguin",
+    desc: "Playful and precise. Rewrites prompts until the reply matches the job.",
     image: "/characters/Pip_1.png",
     evolvedImage: "/characters/pip.png",
     accent: "bg-[#e6fcf5] border-[#0ca678]/20 text-[#097959]",
-    color: "#0ca678"
+    color: "#0ca678",
+    courses: ["Prompting Language Models", "Revise the reply", "How AI Learns"]
   },
   {
     name: "Rexi",
-    title: "The Data Dino",
-    desc: "Ancient and incredibly robust. Specializes in SQL, big data, and data warehouses.",
+    title: "The Example Dino",
+    desc: "Cares about the examples a model learned from, and what those examples leave out.",
     image: "/characters/Rexi_1.png",
     evolvedImage: "/characters/Rexi.png",
     accent: "bg-[#fff9db] border-[#fcc419]/20 text-[#947000]",
-    color: "#fcc419"
+    color: "#fcc419",
+    courses: ["How AI Learns", "Training and use", "Checking What AI Says"]
   },
   {
     name: "Uni",
-    title: "The Creative Unicorn",
-    desc: "Sparkly and design-oriented. A master of UI/UX, CSS layouts, and frontend art.",
+    title: "The Practice Unicorn",
+    desc: "Turns AI into a daily work habit: drafts, summaries, and what not to paste.",
     image: "/characters/Uni_1.png",
     evolvedImage: "/characters/Uni.png",
     accent: "bg-[#fff0f6] border-[#e64980]/20 text-[#a61e4d]",
-    color: "#e64980"
+    color: "#e64980",
+    courses: ["AI for Everyday Work", "Start from a draft", "Leave private details out"]
   }
 ];
 
@@ -103,7 +111,7 @@ const COMPANIONS = [
 const FAQS = [
   {
     question: "What is Omni AI?",
-    answer: "Omni AI is an interactive learning platform that blends gamification with technical education. As you complete lessons in coding, math, and artificial intelligence, your chosen companion pet levels up, earns rewards, and evolves to guide you on more advanced learning quests."
+    answer: "Omni AI is a gamified way to learn how AI works. Short courses cover models, prompting, agents, and how to check an answer. Your companion levels up as you finish them."
   },
   {
     question: "How does the pet evolution work?",
@@ -353,11 +361,11 @@ export function LandingScreen() {
 
               <div className="space-y-4">
                 <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#102312] leading-[1.05]">
-                  Master Tech Skills. <br className="hidden sm:inline" />
+                  Learn how AI works. <br className="hidden sm:inline" />
                   Evolve Your <span className="text-[#3cc74f] underline decoration-wavy decoration-[#3cc74f]/30 underline-offset-4">AI Companion</span>
                 </h1>
                 <p className="max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-[#5a705d] leading-relaxed">
-                  Adopt a customizable AI pet that journeys with you. Maintain streaks, earn gems, and complete hands-on interactive courses on coding, AI, math, and design.
+                  Adopt a companion and work through short courses on models, prompts, agents, and checking what an AI says.
                 </p>
               </div>
 
@@ -470,8 +478,8 @@ export function LandingScreen() {
                     <h4 className="mt-2 text-xl font-bold font-heading text-[#102312]">Byte</h4>
                     <p className="mt-1 text-xs text-[#5a705d] max-w-[280px]">
                       {isEvolved 
-                        ? "Has mastered conditional loops and asynchronous states. Ready for production." 
-                        : "Learning basic data types and simple operations. Feed him correct answers to level up!"
+                        ? "Can explain how a model is trained and how to check a fluent answer." 
+                        : "Starting the first AI course. Correct answers help this pup level up."
                       }
                     </p>
                   </div>
@@ -508,7 +516,7 @@ export function LandingScreen() {
               Learning is better with a companion
             </h2>
             <p className="text-base text-[#5a705d]">
-              We have dismantled complex technology curricula and rebuilt them into addictively simple, game-driven checkpoints that reward daily effort.
+              AI ideas are broken into short lessons, checks, and daily streaks you can finish in a few minutes.
             </p>
           </div>
 
@@ -524,7 +532,7 @@ export function LandingScreen() {
                 <div className="space-y-2">
                   <h3 className="text-lg font-bold font-heading text-[#102312]">Adopt Your AI Pet</h3>
                   <p className="text-sm text-[#5a705d] leading-relaxed">
-                    Pick one of 8 adorable AI companions. Each companion has their own unique personality and area of technical expertise (e.g., frontend, cloud, backend data).
+                    Pick one of 8 companions. Each one leans toward a part of learning AI, from how models work to prompting, agents, and checking answers.
                   </p>
                 </div>
               </div>
@@ -542,7 +550,7 @@ export function LandingScreen() {
                 <div className="space-y-2">
                   <h3 className="text-lg font-bold font-heading text-[#102312]">Solve Interactive Quests</h3>
                   <p className="text-sm text-[#5a705d] leading-relaxed">
-                    Tackle lessons, multiple choice checkpoint cards, and actual programming syntax tasks designed to feel like bite-sized micro-puzzles.
+                    Read a short explanation, then answer a check: multiple choice, matching, or a prompt you finish yourself.
                   </p>
                 </div>
               </div>
@@ -565,7 +573,7 @@ export function LandingScreen() {
                 </div>
               </div>
               <div className="mt-8 border-t border-[#102312]/5 pt-4 flex items-center gap-1.5 text-xs font-semibold text-[#2c5ebd]">
-                Grow together through coding
+                Grow together as you learn AI
               </div>
             </div>
 
@@ -601,7 +609,7 @@ export function LandingScreen() {
                   <div className="h-5 w-5 rounded-full bg-[#eef9f0] border border-[#3cc74f]/20 flex items-center justify-center text-[#25a53a]">
                     <Check className="h-3 w-3" />
                   </div>
-                  Achievements board showcases your programming badges
+                  Achievements mark the AI lessons you have finished
                 </li>
               </ul>
             </div>
@@ -760,9 +768,14 @@ export function LandingScreen() {
                   <div className="space-y-3 pt-3 border-t border-[#102312]/5">
                     <p className="text-[10px] font-bold text-[#5a705d] uppercase tracking-wider font-mono">Specialized Courses</p>
                     <div className="flex flex-wrap gap-2">
-                      <span className="bg-neutral-100 text-[#102312] border border-neutral-200/50 px-3.5 py-1.5 rounded-full text-xs font-semibold">Intro to Python</span>
-                      <span className="bg-neutral-100 text-[#102312] border border-neutral-200/50 px-3.5 py-1.5 rounded-full text-xs font-semibold">Data Structures</span>
-                      <span className="bg-neutral-100 text-[#102312] border border-neutral-200/50 px-3.5 py-1.5 rounded-full text-xs font-semibold">SQL Queries</span>
+                      {selectedPet.courses.map((courseName) => (
+                        <span
+                          key={courseName}
+                          className="bg-neutral-100 text-[#102312] border border-neutral-200/50 px-3.5 py-1.5 rounded-full text-xs font-semibold"
+                        >
+                          {courseName}
+                        </span>
+                      ))}
                     </div>
                   </div>
 
