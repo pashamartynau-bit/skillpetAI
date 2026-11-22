@@ -73,7 +73,16 @@ Strapi is the Headless CMS managing courses, chapters, and companion progression
 
 ---
 
-### C. Stripe Setup
+### C. Omni Guide (Grok)
+
+The course assistant calls the xAI API from the server.
+
+1. **`XAI_API_KEY`**: an xAI API key. Keep it in `.env.local`. Do not prefix it with `NEXT_PUBLIC_`.
+2. **`XAI_MODEL`**: optional. Defaults to `grok-4.7`.
+
+---
+
+### D. Stripe Setup
 
 Stripe powers the monthly and yearly subscriptions for premium courses and full access.
 

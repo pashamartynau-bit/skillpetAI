@@ -4,105 +4,27 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { useState } from "react";
 
-import { fetchDashboardCourses, type DashboardCourse } from "@/lib/course-api";
+type GuideCourse = {
+  id: string;
+  name: string;
+  description: string;
+  difficulty: string;
+  href: string;
+};
 
 type ChatMessage = {
   id: string;
   role: "assistant" | "user";
   text: string;
-  courses?: DashboardCourse[];
+  courses?: GuideCourse[];
 };
 
 const STARTER_PROMPTS = ["AI and machine learning", "Learn to code", "Data and analytics"];
-
-const TOPIC_GROUPS = [
-  {
-    aliases: ["ai", "artificial intelligence", "machine learning", "neural network", "prompt"],
-    keywords: ["ai", "artificial intelligence", "machine learning", "neural", "prompt", "agent"],
-  },
-  {
-    aliases: ["coding", "programming", "code", "python", "javascript", "software"],
-    keywords: ["coding", "programming", "code", "python", "javascript", "software", "web"],
-  },
-  {
-    aliases: ["data", "analytics", "sql", "database", "visualization"],
-    keywords: ["data", "analytics", "sql", "database", "visualization", "statistics"],
-  },
-  {
-    aliases: ["design", "ui", "ux", "frontend", "css"],
-    keywords: ["design", "ui", "ux", "frontend", "css", "visual"],
-  },
-  {
-    aliases: ["math", "mathematics", "algebra", "statistics"],
-    keywords: ["math", "mathematics", "algebra", "statistics", "probability"],
-  },
-];
-
-const STOP_WORDS = new Set([
-  "about",
-  "and",
-  "course",
-  "courses",
-  "for",
-  "from",
-  "help",
-  "into",
-  "learn",
-  "like",
-  "looking",
-  "me",
-  "please",
-  "the",
-  "want",
-  "what",
-  "with",
-]);
-
-function findMatchingCourses(query: string, courses: DashboardCourse[]) {
-  const normalizedQuery = query.toLowerCase();
-  const queryTerms = new Set(
-    normalizedQuery.match(/[a-z0-9+#.]+/g)?.filter(
-      (term) => term.length > 2 && !STOP_WORDS.has(term),
-    ) ?? [],
-  );
-
-  return courses
-    .map((course) => {
-      const searchableText =
-        `${course.name} ${course.description} ${course.difficulty}`.toLowerCase();
-      let score = [...queryTerms].filter((term) => searchableText.includes(term)).length;
-
-      for (const topic of TOPIC_GROUPS) {
-        if (topic.aliases.some((alias) => normalizedQuery.includes(alias))) {
-          score += topic.keywords.filter((keyword) => searchableText.includes(keyword)).length * 2;
-        }
-      }
-
-      if (
-        /\b(beginner|new to|starting out)\b/.test(normalizedQuery) &&
-        /beginner|introductory/i.test(course.difficulty)
-      ) {
-        score += 1;
-      }
-
-      return { course, score };
-    })
-    .filter((match) => match.score > 0)
-    .sort(
-      (left, right) =>
-        right.score - left.score ||
-        Number(right.course.isFeatured) - Number(left.course.isFeatured) ||
-        left.course.sortOrder - right.course.sortOrder,
-    )
-    .slice(0, 3)
-    .map((match) => match.course);
-}
 
 export function CourseGuideChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
-  const [courses, setCourses] = useState<DashboardCourse[] | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
@@ -127,28 +49,42 @@ export function CourseGuideChat() {
     setIsThinking(true);
 
     try {
-      const availableCourses = courses ?? (await fetchDashboardCourses());
-      setCourses(availableCourses);
-      const matches = findMatchingCourses(query, availableCourses);
+      const history = [
+        ...messages.map((message) => ({ role: message.role, text: message.text })),
+        { role: "user" as const, text: query },
+      ];
+      const response = await fetch("/api/guide", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+      });
+      const payload = (await response.json()) as {
+        courses?: GuideCourse[];
+        error?: string;
+        text?: string;
+      };
+
+      if (!response.ok || !payload.text) {
+        throw new Error(payload.error ?? "Grok could not answer just now.");
+      }
+
       setMessages((currentMessages) => [
         ...currentMessages,
         {
-          id: `assistant-${nextMessageId}`,
+          id: crypto.randomUUID(),
           role: "assistant",
-          text: matches.length
-            ? "These available courses look like a good fit. Tell me your experience level if you’d like me to narrow it down."
-            : "I couldn’t match that to a course yet. Are you interested in AI, coding, data, design, or math?",
-          courses: matches,
+          text: payload.text ?? "",
+          courses: payload.courses,
         },
       ]);
     } catch (error) {
-      console.error("Failed to load courses for Omni Guide:", error);
+      console.error("Failed to ask Omni Guide:", error);
       setMessages((currentMessages) => [
         ...currentMessages,
         {
-          id: `assistant-${nextMessageId}`,
+          id: crypto.randomUUID(),
           role: "assistant",
-          text: "I couldn’t load the course catalog just now. Please try again in a moment.",
+          text: error instanceof Error ? error.message : "I couldn’t reach Grok just now. Please try again.",
         },
       ]);
     } finally {
@@ -227,7 +163,7 @@ export function CourseGuideChat() {
             ))}
             {isThinking ? (
               <p className="text-sm text-[#687669]" role="status">
-                Checking the course catalog…
+                Asking Grok…
               </p>
             ) : null}
           </div>
@@ -272,7 +208,7 @@ export function CourseGuideChat() {
             </button>
           </form>
           <p className="bg-white px-4 pb-3 text-center text-[10px] text-[#849084]">
-            Recommendations use course titles and descriptions from Omni AI.
+            Omni Guide answers with Grok using the Omni AI course catalog.
           </p>
         </section>
       ) : null}
