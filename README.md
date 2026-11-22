@@ -69,6 +69,10 @@ STRAPI_USER_COURSE_PROGRESS_COLLECTION=user-course-progresses
 # Stripe Billing Settings
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
 STRIPE_WEBHOOK_SECRET=whsec_your_webhook_signing_secret
+
+# xAI key for the Omni Guide chat. Keep this on the server.
+XAI_API_KEY=xai_your_api_key
+XAI_MODEL=grok-4.7
 ```
 
 > [!TIP]
