@@ -36,7 +36,7 @@ export default function CoursesLayout({
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)]">
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] dark:bg-[radial-gradient(circle_at_top_left,#1a2a1e_0%,#101910_48%,#0c140f_100%)]">
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-accent border-t-transparent" />
       </div>
     );

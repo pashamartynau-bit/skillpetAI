@@ -102,7 +102,7 @@ export function CourseGuideChat() {
       {isOpen ? (
         <section
           aria-label="Omni Guide course assistant"
-          className="flex h-[min(36rem,calc(100dvh-6rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-[#dce6d7] bg-white shadow-[0_24px_80px_-24px_rgba(16,35,18,0.35)]"
+          className="flex h-[min(36rem,calc(100dvh-6rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-[#dce6d7] bg-white shadow-[0_24px_80px_-24px_rgba(16,35,18,0.35)] dark:border-white/10 dark:bg-[#152118]"
           role="dialog"
         >
           <header className="flex items-center justify-between bg-[#102312] px-5 py-4 text-white">
@@ -127,7 +127,7 @@ export function CourseGuideChat() {
 
           <div
             aria-live="polite"
-            className="flex-1 space-y-4 overflow-y-auto bg-[#f7faf4] px-4 py-5"
+            className="flex-1 space-y-4 overflow-y-auto bg-[#f7faf4] px-4 py-5 dark:bg-[#101910]"
             role="log"
           >
             {messages.map((message) => (
@@ -139,25 +139,25 @@ export function CourseGuideChat() {
                   className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-6 ${
                     message.role === "user"
                       ? "rounded-br-md bg-[#102312] text-white"
-                      : "rounded-bl-md border border-[#e5ecdf] bg-white text-[#344536]"
+                      : "rounded-bl-md border border-[#e5ecdf] bg-white text-[#344536] dark:border-white/10 dark:bg-[#1c2a20] dark:text-[#e8f3e6]"
                   }`}
                 >
                   <p>{message.text}</p>
                   {message.courses?.map((course) => (
                     <Link
-                      className="mt-3 block rounded-xl border border-[#e5ecdf] bg-[#fbfdf9] p-3 transition hover:border-[#3cc74f] hover:bg-[#f4fbf2]"
+                      className="mt-3 block rounded-xl border border-[#e5ecdf] bg-[#fbfdf9] p-3 transition hover:border-[#3cc74f] hover:bg-[#f4fbf2] dark:border-white/10 dark:bg-[#152118] dark:hover:bg-[#243228]"
                       href={course.href}
                       key={course.id}
                       onClick={() => setIsOpen(false)}
                     >
-                      <span className="flex items-center justify-between gap-2 font-semibold text-[#18331b]">
+                      <span className="flex items-center justify-between gap-2 font-semibold text-[#18331b] dark:text-[#e8f3e6]">
                         <span className="flex items-center gap-2">
                           <BookOpen aria-hidden="true" className="h-4 w-4 shrink-0 text-[#2ca949]" />
                           {course.name}
                         </span>
                         <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0" />
                       </span>
-                      <span className="mt-1 block text-xs text-[#687669]">
+                      <span className="mt-1 block text-xs text-[#687669] dark:text-[#a8b7a6]">
                         {course.difficulty} · {course.description}
                       </span>
                     </Link>
@@ -166,17 +166,17 @@ export function CourseGuideChat() {
               </div>
             ))}
             {isThinking ? (
-              <p className="text-sm text-[#687669]" role="status">
+              <p className="text-sm text-[#687669] dark:text-[#a8b7a6]" role="status">
                 Asking Grok…
               </p>
             ) : null}
           </div>
 
           {messages.length === 1 ? (
-            <div className="flex flex-wrap gap-2 border-t border-[#e5ecdf] bg-white px-4 py-3">
+            <div className="flex flex-wrap gap-2 border-t border-[#e5ecdf] bg-white px-4 py-3 dark:border-white/10 dark:bg-[#152118]">
               {STARTER_PROMPTS.map((prompt) => (
                 <button
-                  className="rounded-full border border-[#dce6d7] px-3 py-1.5 text-xs font-medium text-[#425344] transition hover:border-[#3cc74f] hover:bg-[#f4fbf2] disabled:opacity-50"
+                  className="rounded-full border border-[#dce6d7] px-3 py-1.5 text-xs font-medium text-[#425344] transition hover:border-[#3cc74f] hover:bg-[#f4fbf2] disabled:opacity-50 dark:border-white/15 dark:text-[#d5e6d2] dark:hover:bg-[#243228]"
                   disabled={isThinking}
                   key={prompt}
                   onClick={() => void sendMessage(prompt)}
@@ -189,7 +189,7 @@ export function CourseGuideChat() {
           ) : null}
 
           <form
-            className="flex items-center gap-2 border-t border-[#e5ecdf] bg-white p-3"
+            className="flex items-center gap-2 border-t border-[#e5ecdf] bg-white p-3 dark:border-white/10 dark:bg-[#152118]"
             onSubmit={(event) => {
               event.preventDefault();
               void sendMessage(input);
@@ -197,7 +197,7 @@ export function CourseGuideChat() {
           >
             <input
               aria-label="Ask Omni Guide for a course recommendation"
-              className="min-w-0 flex-1 rounded-full bg-[#f3f6f0] px-4 py-3 text-sm text-[#243327] outline-none placeholder:text-[#899489] focus:ring-2 focus:ring-[#3cc74f]/50"
+              className="min-w-0 flex-1 rounded-full bg-[#f3f6f0] px-4 py-3 text-sm text-[#243327] outline-none placeholder:text-[#899489] focus:ring-2 focus:ring-[#3cc74f]/50 dark:bg-[#101910] dark:text-[#e8f3e6] dark:placeholder:text-[#8ea48c]"
               onChange={(event) => setInput(event.target.value)}
               placeholder="What would you like to learn?"
               value={input}
@@ -211,7 +211,7 @@ export function CourseGuideChat() {
               <Send aria-hidden="true" className="h-4 w-4" />
             </button>
           </form>
-          <p className="bg-white px-4 pb-3 text-center text-[10px] text-[#849084]">
+          <p className="bg-white px-4 pb-3 text-center text-[10px] text-[#849084] dark:bg-[#152118] dark:text-[#8ea48c]">
             Omni Guide answers with Grok using the Omni AI course catalog.
           </p>
         </section>
