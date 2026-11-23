@@ -12,7 +12,7 @@ export async function GET() {
         error:
           error instanceof Error
             ? error.message
-            : "Unable to load courses from Strapi.",
+            : "Unable to load AI courses.",
       },
       { status: 500 },
     );

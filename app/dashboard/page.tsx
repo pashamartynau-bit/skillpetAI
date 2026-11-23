@@ -66,7 +66,7 @@ export default function DashboardPage() {
         startTransition(() => {
           setCourses([]);
           setCoursesError(
-            error instanceof Error ? error.message : "Failed to load courses from Strapi.",
+            error instanceof Error ? error.message : "Failed to load AI courses.",
           );
           setLoadingCourses(false);
         });
@@ -292,8 +292,7 @@ export default function DashboardPage() {
                     No published courses available yet
                   </p>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
-                    Publish one or more course entries in Strapi to show them on the
-                    dashboard and enable `/courses/[slug]` pages.
+                    The AI course catalog is empty. Add a published course to show it here.
                   </p>
                 </div>
               ) : (
@@ -314,7 +313,7 @@ export default function DashboardPage() {
           <p className="text-sm text-[#6b7595] dark:text-[#a8b7a6]">Loading your dashboard...</p>
         ) : null}
         {loadingCourses ? (
-          <p className="text-sm text-[#6b7595] dark:text-[#a8b7a6]">Loading courses from Strapi...</p>
+          <p className="text-sm text-[#6b7595] dark:text-[#a8b7a6]">Loading AI courses...</p>
         ) : null}
         {coursesError ? (
           <p className="text-sm text-[#b25b5b]">{coursesError}</p>

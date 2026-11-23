@@ -22,9 +22,9 @@ const missions = [
 ];
 
 const lessons = [
-  { title: 'Intro to AI agents', duration: '12 min', level: 'Beginner' },
-  { title: 'Prompt engineering', duration: '18 min', level: 'Intermediate' },
-  { title: 'Data storytelling', duration: '10 min', level: 'Beginner' },
+  { title: 'How AI learns', duration: '20 min', level: 'Beginner' },
+  { title: 'Prompting language models', duration: '18 min', level: 'Beginner' },
+  { title: 'Working with AI agents', duration: '24 min', level: 'Intermediate' },
 ];
 
 export default function App() {
