@@ -151,6 +151,76 @@
   }
 }
 
+html.dark .landing-page {
+  background-color: #101910;
+  color: #e8f3e6;
+}
+
+html.dark .landing-page [class*="text-[#102312]"] {
+  color: #e8f3e6;
+}
+
+html.dark .landing-page [class*="text-[#5a705d]"] {
+  color: #a8b7a6;
+}
+
+html.dark .landing-page [class*="text-[#25a53a]"],
+html.dark .landing-page [class*="text-[#2ca949]"] {
+  color: #5ad86a;
+}
+
+html.dark .landing-page [class*="bg-white"]:not(.landing-keep-light) {
+  background-color: rgba(21, 33, 24, 0.94);
+}
+
+html.dark .landing-page [class*="bg-[#eef4e6]"] {
+  background-color: #101910;
+}
+
+html.dark .landing-page [class*="bg-[#f5f9f0]"] {
+  background-color: #0e1711;
+}
+
+html.dark .landing-page [class*="bg-[#eef9f0]"] {
+  background-color: rgba(60, 199, 79, 0.16);
+}
+
+html.dark .landing-page [class*="bg-neutral-100"],
+html.dark .landing-page [class*="bg-neutral-50"],
+html.dark .landing-page [class*="bg-neutral-200"] {
+  background-color: #243228;
+}
+
+html.dark .landing-page [class*="bg-[#102312]"] {
+  background-color: #243228;
+}
+
+html.dark .landing-page [class*="border-[#102312]"],
+html.dark .landing-page [class*="border-white"],
+html.dark .landing-page [class*="border-neutral"] {
+  border-color: rgba(232, 243, 230, 0.14);
+}
+
+html.dark .landing-page [class*="hover:bg-neutral-50"]:hover,
+html.dark .landing-page [class*="hover:bg-neutral-200"]:hover,
+html.dark .landing-page [class*="hover:bg-white"]:hover,
+html.dark .landing-page [class*="hover:bg-[#fcfdfa]"]:hover,
+html.dark .landing-page [class*="hover:bg-black"]:hover {
+  background-color: #2a3a2e;
+}
+
+html.dark .landing-page .landing-keep-light {
+  background-color: #ffffff;
+}
+
+.landing-page .landing-menu {
+  background-color: #ffffff;
+}
+
+html.dark .landing-page .landing-menu {
+  background-color: #152118;
+}
+
 @keyframes chapterIntro {
   0% {
     opacity: 0;

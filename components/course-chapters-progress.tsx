@@ -43,21 +43,21 @@ export function CourseChaptersProgress({
   return (
     <section
       id="course-chapters"
-      className="rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-[0_32px_90px_-56px_rgba(34,46,84,0.5)] backdrop-blur md:p-8"
+      className="rounded-[2rem] border border-white/70 bg-white/90 p-6 shadow-[0_32px_90px_-56px_rgba(34,46,84,0.5)] backdrop-blur md:p-8 dark:border-white/10 dark:bg-[#152118]"
     >
-      <div className="flex flex-col gap-4 border-b border-[#e7ebf3] pb-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 border-b border-[#e7ebf3] pb-6 lg:flex-row lg:items-center lg:justify-between dark:border-white/10">
         <div>
-          <h2 className="text-[1.75rem] font-semibold tracking-[-0.05em] text-[#16214d]">
+          <h2 className="text-[1.75rem] font-semibold tracking-[-0.05em] text-[#16214d] dark:text-[#e8f3e6]">
             Course Chapters
           </h2>
-          <p className="mt-2 text-sm leading-6 text-[#697391]">
+          <p className="mt-2 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
             Track your progress chapter by chapter as you move through the course.
           </p>
         </div>
 
         <div className="w-full max-w-[560px]">
           <div className="flex items-center justify-between gap-4 text-sm">
-            <span className="font-medium text-[#6c7694]">Overall Progress</span>
+            <span className="font-medium text-[#6c7694] dark:text-[#a8b7a6]">Overall Progress</span>
             <span className="text-lg font-semibold text-[#27a844]">{progressPercent}%</span>
           </div>
           <Progress value={progressPercent} className="mt-3 block">
@@ -124,10 +124,10 @@ export function CourseChaptersProgress({
             <div className="min-w-0 pt-3">
               {chapter.status === "locked" ? (
                 <div className="min-w-0">
-                  <h3 className="text-xl font-semibold tracking-[-0.04em] text-[#16214d]">
+                  <h3 className="text-xl font-semibold tracking-[-0.04em] text-[#16214d] dark:text-[#e8f3e6]">
                     {chapter.name}
                   </h3>
-                  <p className="mt-2 line-clamp-1 text-sm leading-6 text-[#697391]">
+                  <p className="mt-2 line-clamp-1 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                     {chapter.description}
                   </p>
                 </div>
@@ -136,10 +136,10 @@ export function CourseChaptersProgress({
                   href={chapter.href}
                   className="group block min-w-0 rounded-[1.4rem] px-3 py-2 -mx-3 -my-2 transition-colors hover:bg-[#f7fbff]"
                 >
-                  <h3 className="text-xl font-semibold tracking-[-0.04em] text-[#16214d] transition-colors group-hover:text-[#245eac]">
+                  <h3 className="text-xl font-semibold tracking-[-0.04em] text-[#16214d] transition-colors group-hover:text-[#245eac] dark:text-[#e8f3e6] dark:group-hover:text-[#8fd19e]">
                     {chapter.name}
                   </h3>
-                  <p className="mt-2 line-clamp-1 text-sm leading-6 text-[#697391]">
+                  <p className="mt-2 line-clamp-1 text-sm leading-6 text-[#697391] dark:text-[#a8b7a6]">
                     {chapter.description}
                   </p>
                 </Link>

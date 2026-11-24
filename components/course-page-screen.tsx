@@ -47,7 +47,7 @@ export function CoursePageScreen({ slug }: CoursePageScreenProps) {
 
   if (!data && !error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)]">
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] dark:bg-[radial-gradient(circle_at_top_left,#1a2a1e_0%,#101910_48%,#0c140f_100%)]">
         <Loader2 className="h-10 w-10 animate-spin text-accent" />
       </div>
     );
@@ -55,10 +55,10 @@ export function CoursePageScreen({ slug }: CoursePageScreenProps) {
 
   if (!data) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] px-6 text-center">
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] dark:bg-[radial-gradient(circle_at_top_left,#1a2a1e_0%,#101910_48%,#0c140f_100%)] px-6 text-center">
         <div>
-          <p className="text-xl font-semibold text-[#16214d]">Unable to load course</p>
-          <p className="mt-2 text-sm text-[#697391]">{error}</p>
+          <p className="text-xl font-semibold text-[#16214d] dark:text-[#e8f3e6]">Unable to load course</p>
+          <p className="mt-2 text-sm text-[#697391] dark:text-[#a8b7a6]">{error}</p>
         </div>
       </div>
     );
@@ -67,7 +67,7 @@ export function CoursePageScreen({ slug }: CoursePageScreenProps) {
   const { course } = data;
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,#fbfff7_0%,#edf5e6_42%,#e5efde_100%)] dark:bg-[radial-gradient(circle_at_top_left,#1a2a1e_0%,#101910_48%,#0c140f_100%)] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
         <div>
           <Button
@@ -79,7 +79,7 @@ export function CoursePageScreen({ slug }: CoursePageScreenProps) {
           </Button>
         </div>
 
-        <section className="grid gap-8 rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_32px_90px_-56px_rgba(34,46,84,0.5)] backdrop-blur md:grid-cols-[minmax(0,1.1fr)_360px] md:p-8">
+        <section className="grid gap-8 rounded-[2rem] border border-white/70 bg-white/88 p-6 shadow-[0_32px_90px_-56px_rgba(34,46,84,0.5)] backdrop-blur md:grid-cols-[minmax(0,1.1fr)_360px] md:p-8 dark:border-white/10 dark:bg-[#152118]">
           <div className="flex flex-col justify-center">
             <div className="flex flex-wrap gap-3">
               <p className="inline-flex w-fit items-center rounded-full bg-[#eef9f0] px-4 py-2 text-sm font-semibold text-[#2ca949]">
@@ -88,21 +88,21 @@ export function CoursePageScreen({ slug }: CoursePageScreenProps) {
               <CourseAccessBadge accessType={data.courseAccessType} />
             </div>
 
-            <h1 className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-[#16214d] sm:text-[3.25rem] sm:leading-[1.02]">
+            <h1 className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-[#16214d] sm:text-[3.25rem] sm:leading-[1.02] dark:text-[#e8f3e6]">
               {course.name}
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#5f6987] sm:text-lg">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[#5f6987] sm:text-lg dark:text-[#a8b7a6]">
               {course.description}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-sm font-medium text-[#4b5677]">
+            <div className="mt-6 flex flex-wrap items-center gap-3 text-sm font-medium text-[#4b5677] dark:text-[#d5e6d2]">
               {course.estimatedMinutes ? (
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#eef8f0] px-4 py-2 text-accent-strong">
                   <Clock3 className="h-4 w-4" />
                   {course.estimatedMinutes} minutes
                 </span>
               ) : null}
-              <span className="rounded-full bg-[#f3f4f7] px-4 py-2 text-[#55617f]">
+              <span className="rounded-full bg-[#f3f4f7] px-4 py-2 text-[#55617f] dark:bg-[#243228] dark:text-[#d5e6d2]">
                 Course slug: {course.slug}
               </span>
             </div>
@@ -122,7 +122,7 @@ export function CoursePageScreen({ slug }: CoursePageScreenProps) {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-[linear-gradient(155deg,rgba(237,249,238,0.96)_0%,rgba(229,245,232,0.94)_100%)] p-6">
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-[linear-gradient(155deg,rgba(237,249,238,0.96)_0%,rgba(229,245,232,0.94)_100%)] p-6 dark:bg-[linear-gradient(155deg,#1c2a20_0%,#152118_100%)]">
             <div className="absolute -right-4 -bottom-4 h-28 w-28 rounded-full bg-accent/15 blur-3xl" />
             <Image
               src={course.bannerSrc}
@@ -154,7 +154,7 @@ function CourseAccessBadge({ accessType }: { accessType: CourseAccessType }) {
         : "Subscriber only";
 
   return (
-    <span className="inline-flex w-fit items-center rounded-full bg-[#eef3ff] px-4 py-2 text-sm font-semibold text-[#3558c9]">
+    <span className="inline-flex w-fit items-center rounded-full bg-[#eef3ff] px-4 py-2 text-sm font-semibold text-[#3558c9] dark:bg-[#243228] dark:text-[#b7e6bc]">
       {label}
     </span>
   );

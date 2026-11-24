@@ -3,23 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { 
-  Sparkles, 
-  Flame, 
-  Gem, 
-  Heart, 
-  Trophy, 
-  ArrowRight, 
-  Check, 
-  Menu, 
-  X, 
-  ShieldCheck, 
-  BookOpen, 
+import {
+  Sparkles,
+  Flame,
+  ArrowRight,
+  Check,
+  Menu,
+  X,
   HelpCircle,
-  Play,
   Star
 } from "lucide-react";
 import type { UserSchema } from "@insforge/sdk";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getInsforgeBrowserClient } from "@/lib/insforge-browser";
 import { cn } from "@/lib/utils";
 
@@ -107,6 +102,39 @@ const COMPANIONS = [
   }
 ];
 
+const START_COURSES = [
+  {
+    name: "How AI Learns",
+    detail: "See what a model is, and why an answer is a guess.",
+    meta: "Beginner · 20 min · Free",
+    href: "/courses/how-ai-learns",
+  },
+  {
+    name: "Prompting Language Models",
+    detail: "Name the job, the context, and the shape of the reply.",
+    meta: "Beginner · 18 min · Free",
+    href: "/courses/prompting-language-models",
+  },
+  {
+    name: "Checking What AI Says",
+    detail: "Spot a fluent answer that was never checked.",
+    meta: "Beginner · 16 min · Free",
+    href: "/courses/checking-what-ai-says",
+  },
+  {
+    name: "Working with AI Agents",
+    detail: "Give a model tools, then read the steps it takes.",
+    meta: "Intermediate · 24 min",
+    href: "/courses/working-with-ai-agents",
+  },
+  {
+    name: "AI for Everyday Work",
+    detail: "Draft and summarize without pasting private details.",
+    meta: "Intermediate · 22 min",
+    href: "/courses/ai-for-everyday-work",
+  },
+];
+
 // FAQS data
 const FAQS = [
   {
@@ -139,7 +167,6 @@ export function LandingScreen() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("yearly");
-
   useEffect(() => {
     async function checkSession() {
       try {
@@ -172,7 +199,7 @@ export function LandingScreen() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#eef4e6] text-[#102312] overflow-x-hidden font-sans selection:bg-[#3cc74f]/30">
+    <div className="landing-page relative min-h-screen bg-[#eef4e6] text-[#102312] overflow-x-clip font-sans selection:bg-[#3cc74f]/30">
       
       {/* Styles for dynamic custom CSS details */}
       <style>{`
@@ -193,13 +220,18 @@ export function LandingScreen() {
             linear-gradient(to right, rgba(16, 35, 18, 0.03) 1px, transparent 1px),
             linear-gradient(to bottom, rgba(16, 35, 18, 0.03) 1px, transparent 1px);
         }
+        .dark .grid-bg-landing {
+          background-image:
+            linear-gradient(to right, rgba(232, 243, 230, 0.045) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(232, 243, 230, 0.045) 1px, transparent 1px);
+        }
       `}</style>
 
       {/* Grid Pattern overlay */}
       <div className="absolute inset-0 grid-bg-landing pointer-events-none z-0" />
 
       {/* Header Navigation */}
-      <header className="relative z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <header className="sticky top-0 z-50 mx-auto w-full max-w-7xl bg-[#eef4e6]/90 px-4 pb-2 pt-4 backdrop-blur-md sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl px-6 py-4 shadow-[0_8px_30px_rgb(16,35,18,0.03)] transition-all duration-300">
           
           {/* Logo */}
@@ -214,12 +246,14 @@ export function LandingScreen() {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-semibold text-[#5a705d] hover:text-[#102312] transition-colors">Features</a>
+            <a href="#courses" className="text-sm font-semibold text-[#5a705d] hover:text-[#102312] transition-colors">Courses</a>
+            <a href="#features" className="text-sm font-semibold text-[#5a705d] hover:text-[#102312] transition-colors">How it works</a>
             <a href="#companions" className="text-sm font-semibold text-[#5a705d] hover:text-[#102312] transition-colors">Companions</a>
             <a href="#pricing" className="text-sm font-semibold text-[#5a705d] hover:text-[#102312] transition-colors">Pricing</a>
-            <a href="#faq" className="text-sm font-semibold text-[#5a705d] hover:text-[#102312] transition-colors">FAQ</a>
           </div>
 
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
           {/* Action Buttons */}
           <div className="hidden md:flex items-center gap-3">
             {loadingSession ? (
@@ -257,28 +291,37 @@ export function LandingScreen() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button 
+            <button
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-[#102312] hover:bg-black/[0.03] rounded-xl transition-colors"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
+          </div>
         </nav>
-      </header>
 
-      {/* Mobile Dropdown Nav */}
       {isMobileMenuOpen && (
-        <div className="absolute top-24 left-4 right-4 z-40 bg-white border border-[#102312]/10 rounded-3xl p-6 shadow-2xl md:hidden animate-fade-in">
+        <div
+          className="landing-menu absolute left-4 right-4 top-full z-40 mt-2 rounded-3xl border border-[#102312]/10 p-6 shadow-2xl md:hidden"
+        >
           <div className="flex flex-col gap-5">
+            <a 
+              href="#courses" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-base font-semibold text-[#5a705d] hover:text-[#102312]"
+            >
+              Courses
+            </a>
             <a 
               href="#features" 
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-base font-semibold text-[#5a705d] hover:text-[#102312]"
             >
-              Features
+              How it works
             </a>
             <a 
               href="#companions" 
@@ -345,6 +388,7 @@ export function LandingScreen() {
           </div>
         </div>
       )}
+      </header>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-32">
@@ -365,51 +409,47 @@ export function LandingScreen() {
                   Evolve Your <span className="text-[#3cc74f] underline decoration-wavy decoration-[#3cc74f]/30 underline-offset-4">AI Companion</span>
                 </h1>
                 <p className="max-w-xl mx-auto lg:mx-0 text-base sm:text-lg text-[#5a705d] leading-relaxed">
-                  Adopt a companion and work through short courses on models, prompts, agents, and checking what an AI says.
+                  Open a short course below. Each one explains one idea, then checks that you can use it.
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <Link
+                  href="/courses/how-ai-learns"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#3cc74f] hover:bg-[#25a53a] text-white font-bold rounded-2xl shadow-[0_12px_30px_-6px_rgba(60,199,79,0.4)] hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+                >
+                  Start the first lesson
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
                 {currentUser ? (
-                  <Link 
+                  <Link
                     href="/dashboard"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#3cc74f] hover:bg-[#25a53a] text-white font-bold rounded-2xl shadow-[0_12px_30px_-6px_rgba(60,199,79,0.4)] hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white border border-[#102312]/10 hover:border-[#102312]/20 hover:bg-[#fcfdfa] text-[#102312] font-bold rounded-2xl transition-all"
                   >
                     Enter Dashboard
-                    <ArrowRight className="h-5 w-5" />
                   </Link>
                 ) : (
-                  <>
-                    <Link 
-                      href="/login?mode=sign-up"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#3cc74f] hover:bg-[#25a53a] text-white font-bold rounded-2xl shadow-[0_12px_30px_-6px_rgba(60,199,79,0.4)] hover:scale-[1.03] active:scale-[0.97] transition-all duration-200"
-                    >
-                      Adopt Your Pet Free
-                      <ArrowRight className="h-5 w-5" />
-                    </Link>
-                    <Link 
-                      href="/login"
-                      className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white border border-[#102312]/10 hover:border-[#102312]/20 hover:bg-[#fcfdfa] text-[#102312] font-bold rounded-2xl transition-all"
-                    >
-                      Browse Courses
-                    </Link>
-                  </>
+                  <Link
+                    href="/login?mode=sign-up"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-white border border-[#102312]/10 hover:border-[#102312]/20 hover:bg-[#fcfdfa] text-[#102312] font-bold rounded-2xl transition-all"
+                  >
+                    Create a free account
+                  </Link>
                 )}
               </div>
 
-              {/* Social Proof Stats */}
               <div className="pt-6 grid grid-cols-3 gap-4 border-t border-[#102312]/10 max-w-md mx-auto lg:mx-0">
                 <div>
-                  <p className="text-2xl sm:text-3xl font-bold font-heading text-[#102312]">10k+</p>
-                  <p className="text-xs text-[#5a705d]">Active Learners</p>
+                  <p className="text-2xl sm:text-3xl font-bold font-heading text-[#102312]">5</p>
+                  <p className="text-xs text-[#5a705d]">AI courses</p>
+                </div>
+                <div>
+                  <p className="text-2xl sm:text-3xl font-bold font-heading text-[#102312]">17</p>
+                  <p className="text-xs text-[#5a705d]">Short chapters</p>
                 </div>
                 <div>
                   <p className="text-2xl sm:text-3xl font-bold font-heading text-[#102312]">8</p>
-                  <p className="text-xs text-[#5a705d]">Unique Pets</p>
-                </div>
-                <div>
-                  <p className="text-2xl sm:text-3xl font-bold font-heading text-[#102312]">25+</p>
-                  <p className="text-xs text-[#5a705d]">Bite-sized Chapters</p>
+                  <p className="text-xs text-[#5a705d]">Companions</p>
                 </div>
               </div>
 
@@ -501,6 +541,43 @@ export function LandingScreen() {
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      <section id="courses" className="pb-8 sm:pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="space-y-2">
+              <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold text-[#3cc74f]">Start here</span>
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[#102312]">
+                Pick a course and open it
+              </h2>
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-[#5a705d]">
+              The first three are free. You can read a chapter before you create an account.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {START_COURSES.map((course, index) => (
+              <Link
+                key={course.href}
+                href={course.href}
+                className="group flex h-full flex-col rounded-[1.75rem] border border-[#102312]/8 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-[#3cc74f]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-mono text-xs font-bold text-[#25a53a]">0{index + 1}</span>
+                  <span className="text-xs font-semibold text-[#5a705d]">{course.meta}</span>
+                </div>
+                <h3 className="mt-4 text-xl font-bold font-heading text-[#102312]">{course.name}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-[#5a705d]">{course.detail}</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#25a53a]">
+                  Open course
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -818,7 +895,7 @@ export function LandingScreen() {
               >
                 <div 
                   className={cn(
-                    "h-5 w-5 rounded-full bg-white transition-transform duration-200", 
+                    "landing-keep-light h-5 w-5 rounded-full bg-white transition-transform duration-200", 
                     billingPeriod === "yearly" ? "translate-x-5" : "translate-x-0"
                   )} 
                 />
@@ -962,10 +1039,10 @@ export function LandingScreen() {
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold text-[#3cc74f]">Testimonials</span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[#102312]">
-              Loved by junior engineers and designers
+              What learners notice first
             </h2>
             <p className="text-base text-[#5a705d]">
-              Read how our gamified companions make building technical consistency fun and simple.
+              Short chapters, a companion that levels up, and a check after every idea.
             </p>
           </div>
 
@@ -978,7 +1055,7 @@ export function LandingScreen() {
                 {[...Array(5)].map((_, i) => <Star key={i} className="h-4.5 w-4.5 fill-current" />)}
               </div>
               <p className="text-sm leading-relaxed text-[#5a705d]">
-                &ldquo;I used to struggle with code syntax drills. Having Milo celebrate when I write correct algorithms makes maintaining my 30-day streak so addictive.&rdquo;
+                &ldquo;The prompting course made me rewrite one instruction at a time. Milo showing up after a correct check is what kept me on the next chapter.&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-neutral-100 rounded-full flex items-center justify-center font-bold text-xs text-[#25a53a]">
@@ -986,7 +1063,7 @@ export function LandingScreen() {
                 </div>
                 <div>
                   <h6 className="text-xs font-bold text-[#102312]">Sarah Lin</h6>
-                  <p className="text-[10px] text-[#5a705d]">Junior Frontend Engineer</p>
+                  <p className="text-[10px] text-[#5a705d]">Learning how models answer</p>
                 </div>
               </div>
             </div>
@@ -997,7 +1074,7 @@ export function LandingScreen() {
                 {[...Array(5)].map((_, i) => <Star key={i} className="h-4.5 w-4.5 fill-current" />)}
               </div>
               <p className="text-sm leading-relaxed text-[#5a705d]">
-                &ldquo;Adopting Kumo helped me scale my API knowledge. The cloud cat evolves when I answer system structure questions, which helps me visualize abstract networking concepts.&rdquo;
+                &ldquo;How AI Learns was the first time the difference between training a model and chatting with one actually stuck. The checks are short enough to finish on a break.&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-neutral-100 rounded-full flex items-center justify-center font-bold text-xs text-[#2ca949]">
@@ -1005,7 +1082,7 @@ export function LandingScreen() {
                 </div>
                 <div>
                   <h6 className="text-xs font-bold text-[#102312]">Marcus K.</h6>
-                  <p className="text-[10px] text-[#5a705d]">Self-taught Web Developer</p>
+                  <p className="text-[10px] text-[#5a705d]">Started with How AI Learns</p>
                 </div>
               </div>
             </div>
@@ -1016,7 +1093,7 @@ export function LandingScreen() {
                 {[...Array(5)].map((_, i) => <Star key={i} className="h-4.5 w-4.5 fill-current" />)}
               </div>
               <p className="text-sm leading-relaxed text-[#5a705d]">
-                &ldquo;Highly recommend Omni AI Plus! The unlimited hearts mean I can explore buggy solutions and get custom AI diagnostics feedback without feeling discouraged.&rdquo;
+                &ldquo;I miss questions on purpose the first time. The hearts let me retry the check instead of getting stuck on the first wrong guess.&rdquo;
               </p>
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-neutral-100 rounded-full flex items-center justify-center font-bold text-xs text-[#c87618]">
@@ -1024,7 +1101,7 @@ export function LandingScreen() {
                 </div>
                 <div>
                   <h6 className="text-xs font-bold text-[#102312]">Devon Brooks</h6>
-                  <p className="text-[10px] text-[#5a705d]">CS Undergraduate Student</p>
+                  <p className="text-[10px] text-[#5a705d]">Practicing the answer checks</p>
                 </div>
               </div>
             </div>
@@ -1055,6 +1132,7 @@ export function LandingScreen() {
                   className="bg-white border border-[#102312]/5 rounded-2xl overflow-hidden transition-all duration-200"
                 >
                   <button
+                    aria-expanded={isOpen}
                     onClick={() => toggleFaq(i)}
                     className="flex justify-between items-center w-full px-6 py-5 font-semibold text-left text-sm sm:text-base text-[#102312] hover:bg-neutral-50/50 transition-colors"
                   >
